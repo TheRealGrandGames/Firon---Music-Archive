@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firon - Music Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        /* Global UI Protection: Prevent text selection and image dragging */
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background-color: #030303;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        img {
+            pointer-events: none;
+        }
+
+        .sidebar-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            border-left: 4px solid #ff0000;
+        }
+        .glass-player {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .album-card:hover .play-overlay {
+            opacity: 1;
+        }
+        .album-card img {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .album-card:hover img {
+            transform: scale(1.05);
+            filter: brightness(0.6);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030303;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        input[type="range"] {
+            accent-color: #ff0000;
+            cursor: pointer;
+        }
+        .track-row {
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .track-row:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        .track-row.playing {
+            color: #ff0000 !important;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        .track-row.playing .track-title {
+            color: #ff0000;
+            font-weight: 700;
+        }
+        .control-active {
+            color: #ff0000 !important;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        .section-divider {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin: 1.5rem 0 0.5rem 0;
+            padding-bottom: 0.5rem;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-stats {
+            font-weight: 400;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .scope-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .scope-container.hidden {
+            display: none;
+        }
+        .scope-container select {
+            appearance: none;
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 4px 28px 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .scope-container select option {
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .scope-container select:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .scope-container::after {
+            content: "\f0d7";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 10px;
+            font-size: 10px;
+            color: #666;
+            pointer-events: none;
+        }
+        .filter-pill {
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .filter-pill.active {
+            background-color: #ff0000;
+            color: white;
+            border-color: #ff0000;
+        }
+        .time-cell {
+            min-width: 60px;
+            text-align: right;
+            font-family: monospace;
+        }
+
+        /* Enhanced Progress Bar Styles */
+        #progress-container {
+            height: 12px;
+            margin-top: -6px;
+            display: flex;
+            align-items: center;
+        }
+        #progress-bg {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: height 0.1s ease;
+        }
+        #progress-container:hover #progress-bg {
+            height: 6px;
+        }
+        #progress-bar {
+            height: 100%;
+            background: #ff0000;
+            width: 0%;
+            position: relative;
+        }
+        #progress-handle {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+        #progress-container:hover #progress-handle,
+        #progress-container.dragging #progress-handle {
+            transform: translateY(-50%) scale(1);
+        }
+        #progress-container.dragging #progress-bar {
+            background: #ff4444;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- Main Container -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 flex flex-col p-4 space-y-4 hidden md:flex border-r border-white/10">
+            <div class="flex items-center px-2 mb-6 cursor-pointer" onclick="showHome()">
+                <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center mr-2">
+                    <i class="fas fa-archive text-white text-sm"></i>
+                </div>
+                <span class="text-lg font-bold tracking-tighter">Firon - Music Archive</span>
+            </div>
+            
+            <nav class="space-y-1">
+                <a href="#" onclick="showHome()" class="sidebar-link active flex items-center p-3 rounded-lg transition" id="link-home">
+                    <i class="fas fa-home mr-4 text-xl"></i> Home
+                </a>
+                <a href="#" onclick="showSearch()" class="sidebar-link flex items-center p-3 rounded-lg transition" id="link-search">
+                    <i class="fas fa-search mr-4 text-xl"></i> Search
+                </a>
+            </nav>
+
+            <div class="mt-auto p-4 bg-white/5 rounded-xl border border-white/10">
+                <p class="text-xs text-gray-400 mb-2 font-bold uppercase tracking-widest">Archive Status</p>
+                <p class="text-sm font-bold truncate" id="side-playing-info">Offline</p>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main id="main-content" class="flex-1 overflow-y-auto pb-32 bg-gradient-to-b from-[#1a1a1a] to-[#030303]">
+            
+            <!-- Home View -->
+            <div id="home-view" class="p-8">
+                <div class="mb-10">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold tracking-tight">Recent Collections</h2>
+                    </div>
+                    
+                    <div id="albums-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search View -->
+            <div id="search-view" class="p-8 hidden">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-6 tracking-tight">Search Archive</h2>
+                    
+                    <div class="relative mb-8">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="search-input" placeholder="What do you want to listen to?" 
+                               class="w-full bg-white/10 border-none rounded-full py-4 pl-12 pr-4 focus:ring-2 focus:ring-red-600 transition placeholder-gray-500 text-lg shadow-2xl">
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-10" id="filter-container">
+                        <button class="filter-pill active px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider" data-tag="all">All</button>
+                        <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Video Game">Video Game</button>
+                        <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="TV Show">TV Show</button>
+                        <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Movie">Movie</button>
+                        <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Lo-Fi">Lo-Fi</button>
+                    </div>
+
+                    <div id="search-results-container">
+                        <div id="search-albums-section" class="mb-12">
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Albums</h3>
+                            <div id="search-albums-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <div id="search-songs-section" class="mt-12">
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Songs</h3>
+                            <div id="search-songs-grid" class="space-y-1">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Album Detail View -->
+            <div id="album-view" class="p-8 hidden">
+                <button onclick="goBack()" class="mb-8 flex items-center text-gray-400 hover:text-white transition group">
+                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i> Back
+                </button>
+                <div class="flex flex-col md:flex-row items-center md:items-end gap-10 mb-12">
+                    <div class="relative group shadow-2xl">
+                        <img id="view-album-cover" src="" class="w-64 h-64 rounded-lg object-cover shadow-2xl">
+                    </div>
+                    <div class="text-center md:text-left flex-1">
+                        <p class="text-sm font-bold text-red-600 uppercase tracking-widest mb-2" id="view-album-tags">Collection</p>
+                        <h1 id="view-album-title" class="text-4xl md:text-6xl font-black mb-4 tracking-tighter">Album Title</h1>
+                        <p id="view-album-info" class="text-gray-400 text-lg mb-6">Artist • Year</p>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-4 items-center">
+                            <button id="btn-play-album" class="bg-white text-black px-10 py-3 rounded-full font-bold hover:scale-105 transition shadow-xl flex items-center">
+                                <i class="fas fa-play mr-2"></i> Play
+                            </button>
+                            <button id="btn-shuffle-album" class="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition shadow-xl flex items-center">
+                                <i class="fas fa-shuffle mr-2 text-sm"></i> Shuffle
+                            </button>
+                            <div id="view-album-stats" class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2 border-l border-white/10 pl-4 h-6 flex items-center">
+                                <!-- Stats go here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-4xl">
+                    <div class="grid grid-cols-[40px_1fr_90px] px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-white/10 mb-2">
+                        <span>#</span>
+                        <span>Title</span>
+                        <span class="text-right"><i class="far fa-clock"></i></span>
+                    </div>
+                    <div id="tracklist" class="space-y-1">
+                        <!-- Tracks populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Player Bar -->
+    <footer class="glass-player fixed bottom-0 left-0 right-0 h-24 px-4 flex items-center z-50">
+        <!-- Progress Bar (Interactive Dragging) -->
+        <div class="absolute top-0 left-0 right-0 cursor-pointer" id="progress-container">
+            <div id="progress-bg">
+                <div id="progress-bar">
+                    <div id="progress-handle"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between w-full max-w-screen-2xl mx-auto">
+            <!-- Left Side -->
+            <div class="flex items-center w-1/3 min-w-[350px]">
+                <div class="relative w-14 h-14 mr-4 flex-shrink-0">
+                    <img id="current-cover" src="" alt="Cover" class="w-full h-full rounded shadow-2xl object-cover opacity-0 transition-opacity duration-500">
+                </div>
+                <div class="overflow-hidden flex flex-col justify-center">
+                    <h4 id="current-title" class="font-bold truncate text-sm leading-tight mb-1">Pick a record</h4>
+                    <div class="flex items-center space-x-3">
+                        <p id="current-artist" class="text-gray-400 text-xs truncate max-w-[120px]">Firon Archive</p>
+                        <div id="scope-wrapper" class="scope-container hidden">
+                            <select id="playback-scope">
+                                <option value="all">All Music</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Controls -->
+            <div class="flex flex-col items-center flex-1 max-w-md">
+                <div class="flex items-center space-x-6 md:space-x-10">
+                    <button id="btn-shuffle" class="text-gray-500 hover:text-white transition text-xs" title="Shuffle"><i class="fas fa-shuffle"></i></button>
+                    <button id="btn-prev" class="text-white hover:scale-110 transition"><i class="fas fa-step-backward text-xl"></i></button>
+                    <button id="btn-play-pause" class="w-12 h-12 flex items-center justify-center bg-white text-black rounded-full hover:scale-105 transition shadow-lg">
+                        <i class="fas fa-play text-xl ml-1"></i>
+                    </button>
+                    <button id="btn-next" class="text-white hover:scale-110 transition"><i class="fas fa-step-forward text-xl"></i></button>
+                    <button id="btn-repeat" class="text-gray-500 hover:text-white transition text-xs" title="Repeat"><i class="fas fa-repeat"></i></button>
+                </div>
+                <div class="flex items-center space-x-2 text-[10px] font-medium text-gray-500 mt-2 font-mono">
+                    <span id="time-current">0:00</span>
+                    <span class="opacity-30">/</span>
+                    <span id="time-total">0:00</span>
+                </div>
+            </div>
+
+            <!-- Right Utilities -->
+            <div class="flex items-center justify-end w-1/4 space-x-6">
+                <div class="flex items-center group">
+                    <button id="btn-mute" class="hover:text-white transition-colors text-gray-500 focus:outline-none">
+                        <i id="mute-icon" class="fas fa-volume-up mr-3 w-5 text-center"></i>
+                    </button>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7" 
+                           class="w-24 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer hover:bg-white/20 transition-colors">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <audio id="main-audio"></audio>
+
+    <script>
+        const library = [
+            {
+                id: "album-minecraft",
+                title: "Minecraft Soundtrack",
+                artist: "C418",
+                year: "2011-2018",
+                tags: ["Video Game"],
+                realCover: "https://www.rw-designer.com/icon-image/5547-256x256x32.png",
+                dividers: {
+                    0: "Main Menu",
+                    4: "Survival",
+                    16: "Underwater",
+                    19: "Creative",
+                    25: "Nether",
+                    29: "End",
+                    30: "Music Discs",
+                },
+                tracks: [
+                    // Main Menu
+                    { title: "Moog City 2", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/06.%20Moog%20City%202.mp3", duration: "2:59" },
+                    { title: "Mutation", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/09.%20Mutation.mp3", duration: "3:04" },
+                    { title: "Floating Trees", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/12.%20Floating%20Trees.mp3", duration: "4:04" },
+                    { title: "Beginning 2", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/17.%20Beginning%202.mp3", duration: "2:55" },
+                    
+                    // Survival
+                    { title: "Key", url: "https://archive.org/download/08-minecraft_202302/01%20-%20Key.mp3", duration: "1:05" },
+                    { title: "Subwoofer Lullaby", url: "https://archive.org/download/08-minecraft_202302/03%20-%20Subwoofer%20Lullaby.mp3", duration: "3:28" },
+                    { title: "Living Mice", url: "https://archive.org/download/08-minecraft_202302/05%20-%20Living%20Mice.mp3", duration: "2:43" },
+                    { title: "Haggstrom", url: "https://archive.org/download/08-minecraft_202302/07%20-%20Haggstrom.mp3", duration: "3:21" },
+                    { title: "Minecraft", url: "https://archive.org/download/08-minecraft_202302/08%20-%20Minecraft.mp3", duration: "4:04" },
+                    { title: "Oxygène", url: "https://archive.org/download/08-minecraft_202302/09%20-%20Oxyg%C3%A8ne.mp3", duration: "1:03" },
+                    { title: "Mice on Venus", url: "https://archive.org/download/08-minecraft_202302/11%20-%20Mice%20on%20Venus.mp3", duration: "4:42" },
+                    { title: "Dry Hands", url: "https://archive.org/download/minecraft-volume-alpha/12%20-%20C418%20-%20Dry%20Hands.mp3", duration: "1:09" },
+                    { title: "Wet Hands", url: "https://archive.org/download/08-minecraft_202302/13%20-%20Wet%20Hands.mp3", duration: "1:28" },
+                    { title: "Clark", url: "https://archive.org/download/08-minecraft_202302/14%20-%20Clark.mp3", duration: "3:06" },
+                    { title: "Sweden", url: "https://archive.org/download/08-minecraft_202302/18%20-%20Sweden.mp3", duration: "3:32" },
+                    { title: "Danny", url: "https://archive.org/download/08-minecraft_202302/18%20-%20Danny.mp3", duration: "4:01" },
+                    
+                    // Underwater
+                    { title: "Dragon Fish", url: "https://dn710202.ca.archive.org/0/items/dragon-fish-2018/Dragon%20Fish.mp3", duration: "6:12" },
+                    { title: "Shuniji", url: "https://archive.org/download/shuniji-2018/Shuniji.mp3", duration: "4:04" },
+                    { title: "Axolotl", url: "https://archive.org/download/axolotl-2018/Axolotl.mp3", duration: "5:03" },
+                    
+                    // Creative
+                    { title: "Blind Spots", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/04.%20Blind%20Spots.mp3", duration: "5:32" },
+                    { title: "Biome Fest", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/08.%20Biome%20Fest.mp3", duration: "6:17" },
+                    { title: "Haunt Muskie", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/10.%20Haunt%20Muskie.mp3", duration: "6:01" },
+                    { title: "Aria Math", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/13.%20Aria%20Math.mp3", duration: "5:09" },
+                    { title: "Taswell", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/16.%20Taswell.mp3", duration: "8:35" },
+                    { title: "Dreiton", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/18.%20Dreiton.mp3", duration: "8:16" },
+
+                    // Nether
+                    { title: "Dead Voxel", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/03.%20Dead%20Voxel.mp3", duration: "4:55" },
+                    { title: "Concrete Halls", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/07.%20Concrete%20Halls.mp3", duration: "4:13" },
+                    { title: "Warmth", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/11.%20Warmth.mp3", duration: "3:59" },
+                    { title: "Ballad Of The Cats", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/15.%20Ballad%20of%20the%20Cats.mp3", duration: "4:35" },
+                
+                    // End
+                    { title: "The End", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/19.%20The%20End.mp3", duration: "15:04" },
+
+                    // Music Discs
+                    { title: "13", url: "https://archive.org/download/08-minecraft_202302/16%20-%20Thirteen.mp3", duration: "2:52" },
+                    { title: "Cat", url: "https://archive.org/download/08-minecraft_202302/19%20-%20Cat.mp3", duration: "3:06" },
+                    { title: "Dog", url: "https://archive.org/download/08-minecraft_202302/20%20-%20Dog.mp3", duration: "2:11" },
+                    { title: "Chirp", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/20.%20Chirp.mp3", duration: "3:06" },
+                    { title: "Wait", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/21.%20Wait.mp3", duration: "3:54" },
+                    { title: "Mellohi", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/22.%20Mellohi.mp3", duration: "1:37" },
+                    { title: "Stal", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/23%20Stal.mp3", duration: "2:31" },
+                    { title: "Strad", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/24.%20Strad.mp3", duration: "3:08" },
+                    { title: "Ward", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/26.%20Ward.mp3", duration: "4:09" },
+                    { title: "Mall", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/27.%20Mall.mp3", duration: "3:17" },
+                    { title: "Blocks", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/28.%20Blocks.mp3", duration: "5:42" },
+                    { title: "Far", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/29.%20Far.mp3", duration: "3:11" },
+                ]
+            }
+        ];
+
+        let currentPlaylist = [];
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isShuffle = false;
+        let repeatMode = 0; 
+        let playbackScope = 'all';
+        let currentSearchTag = 'all';
+        let previousView = 'home-view';
+        let activeAlbumId = null;
+        let isDraggingProgress = false;
+        let lastVolume = 0.7;
+        let isMuted = false;
+
+        const audio = document.getElementById('main-audio');
+        const playPauseBtn = document.getElementById('btn-play-pause');
+        const nextBtn = document.getElementById('btn-next');
+        const prevBtn = document.getElementById('btn-prev');
+        const shuffleBtn = document.getElementById('btn-shuffle');
+        const repeatBtn = document.getElementById('btn-repeat');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const volumeSlider = document.getElementById('volume-slider');
+        const btnMute = document.getElementById('btn-mute');
+        const muteIcon = document.getElementById('mute-icon');
+        const currentTitle = document.getElementById('current-title');
+        const currentArtist = document.getElementById('current-artist');
+        const currentCover = document.getElementById('current-cover');
+        const timeCurrent = document.getElementById('time-current');
+        const timeTotal = document.getElementById('time-total');
+        const sidePlayingInfo = document.getElementById('side-playing-info');
+        const searchInput = document.getElementById('search-input');
+        const scopeSelect = document.getElementById('playback-scope');
+        const scopeWrapper = document.getElementById('scope-wrapper');
+
+        const homeView = document.getElementById('home-view');
+        const searchView = document.getElementById('search-view');
+        const albumView = document.getElementById('album-view');
+        const albumsGrid = document.getElementById('albums-grid');
+        
+        const searchAlbumsGrid = document.getElementById('search-albums-grid');
+        const searchSongsGrid = document.getElementById('search-songs-grid');
+        const filterContainer = document.getElementById('filter-container');
+
+        function init() {
+            audio.volume = 0.7;
+            renderHomeAlbums(library);
+            setupSearchListeners();
+            updateRepeatUI();
+            setupProgressBarDragging();
+            setupVolumeControls();
+        }
+
+        function setupVolumeControls() {
+            btnMute.onclick = () => {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    lastVolume = audio.volume;
+                    audio.volume = 0;
+                    volumeSlider.value = 0;
+                } else {
+                    audio.volume = lastVolume || 0.7;
+                    volumeSlider.value = audio.volume;
+                }
+                updateVolumeUI();
+            };
+
+            volumeSlider.oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                audio.volume = val;
+                if (val > 0) {
+                    isMuted = false;
+                    lastVolume = val;
+                } else {
+                    isMuted = true;
+                }
+                updateVolumeUI();
+            };
+        }
+
+        function updateVolumeUI() {
+            if (isMuted || audio.volume === 0) {
+                muteIcon.className = "fas fa-volume-xmark mr-3 w-5 text-center text-red-500";
+            } else if (audio.volume < 0.5) {
+                muteIcon.className = "fas fa-volume-low mr-3 w-5 text-center text-gray-500";
+            } else {
+                muteIcon.className = "fas fa-volume-up mr-3 w-5 text-center text-gray-500 hover:text-white";
+            }
+        }
+
+        function setupProgressBarDragging() {
+            const handleMove = (e) => {
+                if (!isDraggingProgress) return;
+                const rect = progressContainer.getBoundingClientRect();
+                const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                let pct = (clientX - rect.left) / rect.width;
+                pct = Math.max(0, Math.min(1, pct));
+                progressBar.style.width = `${pct * 100}%`;
+                if (audio.duration) {
+                    timeCurrent.innerText = formatTime(pct * audio.duration);
+                }
+            };
+
+            const handleEnd = (e) => {
+                if (!isDraggingProgress) return;
+                const rect = progressContainer.getBoundingClientRect();
+                const clientX = e.type.includes('touch') ? (e.changedTouches ? e.changedTouches[0].clientX : e.clientX) : e.clientX;
+                let pct = (clientX - rect.left) / rect.width;
+                pct = Math.max(0, Math.min(1, pct));
+                if (audio.duration && !isNaN(audio.duration)) {
+                    audio.currentTime = pct * audio.duration;
+                }
+                isDraggingProgress = false;
+                progressContainer.classList.remove('dragging');
+            };
+
+            const handleStart = (e) => {
+                isDraggingProgress = true;
+                progressContainer.classList.add('dragging');
+                handleMove(e);
+            };
+
+            progressContainer.addEventListener('mousedown', handleStart);
+            window.addEventListener('mousemove', handleMove);
+            window.addEventListener('mouseup', handleEnd);
+
+            progressContainer.addEventListener('touchstart', handleStart);
+            window.addEventListener('touchmove', handleMove);
+            window.addEventListener('touchend', handleEnd);
+        }
+
+        function showHome() {
+            homeView.classList.remove('hidden');
+            searchView.classList.add('hidden');
+            albumView.classList.add('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('link-home').classList.add('active');
+            previousView = 'home-view';
+        }
+
+        function showSearch() {
+            homeView.classList.add('hidden');
+            searchView.classList.remove('hidden');
+            albumView.classList.add('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('link-search').classList.add('active');
+            previousView = 'search-view';
+            performSearch();
+        }
+
+        function goBack() {
+            if (previousView === 'search-view') showSearch();
+            else showHome();
+        }
+
+        function setupSearchListeners() {
+            searchInput.oninput = () => performSearch();
+            
+            filterContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-pill')) {
+                    document.querySelectorAll('.filter-pill').forEach(p => {
+                        p.classList.remove('active');
+                        p.classList.add('bg-white/5');
+                    });
+                    e.target.classList.add('active');
+                    e.target.classList.remove('bg-white/5');
+                    currentSearchTag = e.target.getAttribute('data-tag');
+                    performSearch();
+                }
+            });
+        }
+
+        function performSearch() {
+            const query = searchInput.value.toLowerCase();
+            const filteredAlbums = library.filter(a => {
+                const matchesText = a.title.toLowerCase().includes(query) || a.artist.toLowerCase().includes(query);
+                const matchesTag = currentSearchTag === 'all' || a.tags.includes(currentSearchTag);
+                return matchesText && matchesTag;
+            });
+
+            const matchingSongs = [];
+            library.forEach(album => {
+                const matchesTag = currentSearchTag === 'all' || album.tags.includes(currentSearchTag);
+                if (matchesTag) {
+                    album.tracks.forEach((track, idx) => {
+                        if (track.title.toLowerCase().includes(query)) {
+                            matchingSongs.push({ ...track, album, trackIndex: idx });
+                        }
+                    });
+                }
+            });
+
+            renderSearchContent(filteredAlbums, matchingSongs);
+        }
+
+        function renderHomeAlbums(data) {
+            albumsGrid.innerHTML = '';
+            data.forEach(album => {
+                albumsGrid.appendChild(createAlbumCard(album));
+            });
+        }
+
+        function renderSearchContent(albums, songs) {
+            searchAlbumsGrid.innerHTML = '';
+            searchSongsGrid.innerHTML = '';
+
+            if (albums.length === 0 && songs.length === 0) {
+                searchAlbumsGrid.innerHTML = '<p class="text-gray-500 text-sm">No results found.</p>';
+            }
+
+            albums.forEach(album => {
+                searchAlbumsGrid.appendChild(createAlbumCard(album));
+            });
+
+            songs.forEach(song => {
+                const row = document.createElement('div');
+                row.className = "track-row flex items-center p-3 group cursor-pointer bg-white/5 hover:bg-white/10 rounded-lg";
+                row.innerHTML = `
+                    <img src="${song.album.realCover}" class="w-10 h-10 rounded mr-4 object-cover">
+                    <div class="flex-1 overflow-hidden">
+                        <div class="font-medium text-sm truncate track-title">${song.title}</div>
+                        <div class="text-xs text-gray-500 truncate">${song.album.artist} • ${song.album.title}</div>
+                    </div>
+                    <div class="time-cell text-gray-500 text-xs font-mono ml-4">${song.duration}</div>
+                `;
+                row.onclick = () => {
+                    activeAlbumId = song.album.id;
+                    currentPlaylist = albumToPlaylist(song.album);
+                    playTrack(song.trackIndex);
+                };
+                searchSongsGrid.appendChild(row);
+            });
+        }
+
+        function createAlbumCard(album) {
+            const card = document.createElement('div');
+            card.className = "album-card group cursor-pointer flex flex-col animate-in fade-in duration-300";
+            card.innerHTML = `
+                <div class="relative aspect-square overflow-hidden rounded-xl shadow-xl mb-3">
+                    <img src="${album.realCover}" class="w-full h-full object-cover">
+                    <div class="play-overlay absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300 bg-black/40">
+                         <div class="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <i class="fas fa-play text-2xl ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-1">
+                    <h3 class="font-bold text-sm truncate mb-0.5 group-hover:text-red-600 transition-colors">${album.title}</h3>
+                    <p class="text-gray-500 text-xs truncate uppercase tracking-tighter">${album.artist} • ${album.year}</p>
+                </div>
+            `;
+            card.onclick = () => showAlbum(album.id);
+            return card;
+        }
+
+        function albumToPlaylist(album) {
+            let currentLabel = 'General';
+            return album.tracks.map((t, idx) => {
+                if (album.dividers && album.dividers[idx]) {
+                    currentLabel = album.dividers[idx];
+                }
+                return {
+                    ...t, 
+                    albumId: album.id,
+                    cover: album.realCover, 
+                    artist: album.artist, 
+                    section: currentLabel,
+                    dividers: album.dividers || {}
+                };
+            });
+        }
+
+        function updateScopeDropdown(track) {
+            const oldVal = scopeSelect.value;
+            const hasDividers = track.dividers && Object.keys(track.dividers).length > 0;
+            
+            if (!hasDividers) {
+                scopeWrapper.classList.add('hidden');
+                playbackScope = 'all';
+                return;
+            }
+
+            scopeWrapper.classList.remove('hidden');
+            scopeSelect.innerHTML = '<option value="all">All Music</option>';
+            
+            const labels = [...new Set(Object.values(track.dividers))];
+            labels.forEach(label => {
+                const opt = document.createElement('option');
+                opt.value = label;
+                opt.innerText = label;
+                scopeSelect.appendChild(opt);
+            });
+            
+            scopeSelect.value = Array.from(scopeSelect.options).some(o => o.value === oldVal) ? oldVal : 'all';
+            playbackScope = scopeSelect.value;
+        }
+
+        function showAlbum(albumId) {
+            const album = library.find(a => a.id === albumId);
+            if (!album) return;
+
+            homeView.classList.add('hidden');
+            searchView.classList.add('hidden');
+            albumView.classList.remove('hidden');
+            
+            document.getElementById('view-album-cover').src = album.realCover;
+            document.getElementById('view-album-title').innerText = album.title;
+            document.getElementById('view-album-info').innerText = `${album.artist} • ${album.year}`;
+            document.getElementById('view-album-tags').innerText = (album.tags || []).join(' • ');
+
+            let totalAlbumSec = 0;
+            album.tracks.forEach(t => totalAlbumSec += durationToSeconds(t.duration));
+            document.getElementById('view-album-stats').innerText = `${album.tracks.length} Songs • ${secondsToDuration(totalAlbumSec)}`;
+
+            renderTracklist(album);
+
+            document.getElementById('btn-play-album').onclick = () => {
+                activeAlbumId = album.id;
+                currentPlaylist = albumToPlaylist(album);
+                isShuffle = false; shuffleBtn.classList.remove('control-active'); playTrack(0);
+            };
+
+            document.getElementById('btn-shuffle-album').onclick = () => {
+                activeAlbumId = album.id;
+                currentPlaylist = albumToPlaylist(album);
+                isShuffle = true; shuffleBtn.classList.add('control-active'); playTrack(Math.floor(Math.random()*currentPlaylist.length));
+            };
+        }
+
+        function renderTracklist(album) {
+            const tracklist = document.getElementById('tracklist');
+            tracklist.innerHTML = '';
+            
+            const sectionStats = {};
+            if (album.dividers) {
+                const keys = Object.keys(album.dividers).map(Number).sort((a,b) => a-b);
+                keys.forEach((start, i) => {
+                    const end = keys[i+1] || album.tracks.length;
+                    const slice = album.tracks.slice(start, end);
+                    let sec = 0; slice.forEach(t => sec += durationToSeconds(t.duration));
+                    sectionStats[start] = { count: slice.length, time: secondsToDuration(sec) };
+                });
+            }
+
+            album.tracks.forEach((track, index) => {
+                if (album.dividers && album.dividers[index]) {
+                    const stats = sectionStats[index];
+                    const div = document.createElement('div');
+                    div.className = "section-divider";
+                    div.innerHTML = `<span>${album.dividers[index]}</span><span class="section-stats">${stats.count} songs • ${stats.time}</span>`;
+                    tracklist.appendChild(div);
+                }
+
+                const isCurrent = activeAlbumId === album.id && currentTrackIndex === index;
+                const row = document.createElement('div');
+                row.className = `track-row grid grid-cols-[40px_1fr_90px] items-center px-4 py-3 group cursor-pointer ${isCurrent ? 'playing' : ''}`;
+                row.innerHTML = `
+                    <div class="text-gray-500 text-sm font-medium group-hover:hidden">${isCurrent ? '<i class="fas fa-volume-up text-red-600"></i>' : index + 1}</div>
+                    <div class="hidden group-hover:block text-white text-xs"><i class="fas fa-play"></i></div>
+                    <div class="overflow-hidden pr-4">
+                        <div class="font-medium text-sm truncate track-title">${track.title}</div>
+                        <div class="text-xs text-gray-500 truncate">${album.artist}</div>
+                    </div>
+                    <div class="time-cell text-gray-500 text-xs font-mono">${track.duration}</div>
+                `;
+                row.onclick = () => { 
+                    activeAlbumId = album.id;
+                    currentPlaylist = albumToPlaylist(album); 
+                    playTrack(index); 
+                };
+                tracklist.appendChild(row);
+            });
+        }
+
+        function playTrack(index) {
+            if (index < 0 || index >= currentPlaylist.length) return;
+            currentTrackIndex = index;
+            const track = currentPlaylist[currentTrackIndex];
+            audio.src = track.url;
+            currentTitle.innerText = track.title;
+            currentArtist.innerText = track.artist;
+            currentCover.src = track.cover;
+            currentCover.classList.remove('opacity-0');
+            sidePlayingInfo.innerText = `${track.title} - ${track.artist}`;
+            
+            updateScopeDropdown(track);
+            updateUIHighlights();
+
+            audio.play().then(() => { isPlaying = true; updatePlayButton(); }).catch(() => { isPlaying = false; updatePlayButton(); });
+        }
+
+        function updateUIHighlights() {
+            if (!albumView.classList.contains('hidden')) {
+                const album = library.find(a => a.id === activeAlbumId);
+                if (album) renderTracklist(album);
+            }
+        }
+
+        function durationToSeconds(dur) {
+            if (!dur) return 0;
+            const parts = dur.split(':').map(Number);
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            return 0;
+        }
+
+        function secondsToDuration(sec) {
+            if (!sec || isNaN(sec)) return "0:00";
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor((sec % 3600) / 60);
+            const s = Math.floor(sec % 60);
+            
+            if (h > 0) {
+                return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function formatTime(s) {
+            return secondsToDuration(s);
+        }
+
+        function updatePlayButton() {
+            playPauseBtn.innerHTML = isPlaying ? '<i class="fas fa-pause text-xl"></i>' : '<i class="fas fa-play text-xl ml-1"></i>';
+        }
+
+        function getFilteredIndices() {
+            if (playbackScope === 'all') return currentPlaylist.map((_, i) => i);
+            return currentPlaylist.map((t, i) => t.section === playbackScope ? i : -1).filter(i => i !== -1);
+        }
+
+        function nextTrack() {
+            const allowed = getFilteredIndices();
+            if (allowed.length === 0) return;
+            if (isShuffle) {
+                playTrack(allowed[Math.floor(Math.random() * allowed.length)]);
+            } else {
+                const curr = allowed.indexOf(currentTrackIndex);
+                playTrack(allowed[(curr + 1) % allowed.length]);
+            }
+        }
+
+        function prevTrack() {
+            if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+            const allowed = getFilteredIndices();
+            if (allowed.length === 0) return;
+            const curr = allowed.indexOf(currentTrackIndex);
+            playTrack(allowed[(curr - 1 + allowed.length) % allowed.length]);
+        }
+
+        shuffleBtn.onclick = () => { isShuffle = !isShuffle; shuffleBtn.classList.toggle('control-active', isShuffle); };
+        
+        repeatBtn.onclick = () => { 
+            repeatMode = (repeatMode + 1) % 3; 
+            updateRepeatUI(); 
+        };
+        
+        function updateRepeatUI() {
+            repeatBtn.classList.remove('control-active', 'text-gray-500');
+            if (repeatMode === 0) {
+                repeatBtn.innerHTML = '<i class="fas fa-repeat"></i>';
+                repeatBtn.classList.add('text-gray-500');
+            } 
+            else if (repeatMode === 1) {
+                repeatBtn.innerHTML = '<i class="fas fa-repeat"></i>';
+                repeatBtn.classList.add('control-active');
+            } 
+            else {
+                repeatBtn.innerHTML = '<div class="relative inline-block"><i class="fas fa-repeat"></i><span class="absolute -top-1 -right-1 bg-red-600 text-[8px] rounded-full w-3 h-3 flex items-center justify-center text-white font-bold">1</span></div>';
+                repeatBtn.classList.add('control-active');
+            }
+        }
+
+        audio.onended = () => {
+            if (repeatMode === 2) playTrack(currentTrackIndex);
+            else nextTrack();
+        };
+
+        audio.ontimeupdate = () => {
+            if (!isDraggingProgress) {
+                const pct = (audio.currentTime / audio.duration) * 100 || 0;
+                progressBar.style.width = `${pct}%`;
+                timeCurrent.innerText = formatTime(audio.currentTime);
+                timeTotal.innerText = formatTime(audio.duration);
+            }
+        };
+
+        playPauseBtn.onclick = () => {
+            if (!audio.src) return;
+            if (isPlaying) audio.pause(); else audio.play();
+            isPlaying = !isPlaying; updatePlayButton();
+        };
+
+        nextBtn.onclick = nextTrack;
+        prevBtn.onclick = prevTrack;
+        
+        init();
+    </script>
+</body>
+</html>
