@@ -163,6 +163,25 @@
             font-family: monospace;
         }
 
+        /* Playlist Background Styles */
+        #album-header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+            z-index: 0;
+        }
+        .album-detail-container {
+            position: relative;
+            z-index: 1;
+        }
+
         /* Enhanced Progress Bar Styles */
         #progress-container {
             height: 12px;
@@ -237,10 +256,13 @@
         </aside>
 
         <!-- Content Area -->
-        <main id="main-content" class="flex-1 overflow-y-auto pb-32 bg-gradient-to-b from-[#1a1a1a] to-[#030303]">
+        <main id="main-content" class="flex-1 overflow-y-auto pb-32 bg-gradient-to-b from-[#1a1a1a] to-[#030303] relative">
             
+            <!-- Dynamic Album Background -->
+            <div id="album-header-bg"></div>
+
             <!-- Home View -->
-            <div id="home-view" class="p-8">
+            <div id="home-view" class="p-8 relative z-10">
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-3xl font-bold tracking-tight">Recent Collections</h2>
@@ -253,7 +275,7 @@
             </div>
 
             <!-- Search View -->
-            <div id="search-view" class="p-8 hidden">
+            <div id="search-view" class="p-8 hidden relative z-10">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-3xl font-bold mb-6 tracking-tight">Search Archive</h2>
                     
@@ -290,7 +312,7 @@
             </div>
 
             <!-- Album Detail View -->
-            <div id="album-view" class="p-8 hidden">
+            <div id="album-view" class="p-8 hidden relative z-10 album-detail-container">
                 <button onclick="goBack()" class="mb-8 flex items-center text-gray-400 hover:text-white transition group">
                     <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i> Back
                 </button>
@@ -400,7 +422,10 @@
                 artist: "C418",
                 year: "2011-2018",
                 tags: ["Video Game"],
+                hidden: false,
                 realCover: "https://www.rw-designer.com/icon-image/5547-256x256x32.png",
+                // PLAYLIST BACKGROUND IMAGE URL
+                bgImage: "https://minecraft.wiki/images/thumb/Overworld_1.18.png/640px-Overworld_1.18.png?9499d", 
                 dividers: {
                     0: "Main Menu",
                     4: "Survival",
@@ -411,13 +436,13 @@
                     30: "Music Discs",
                 },
                 tracks: [
-                    // Main Menu
+                    //Main Menu
                     { title: "Moog City 2", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/06.%20Moog%20City%202.mp3", duration: "2:59" },
                     { title: "Mutation", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/09.%20Mutation.mp3", duration: "3:04" },
                     { title: "Floating Trees", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/12.%20Floating%20Trees.mp3", duration: "4:04" },
                     { title: "Beginning 2", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/17.%20Beginning%202.mp3", duration: "2:55" },
                     
-                    // Survival
+                    //Survival
                     { title: "Key", url: "https://archive.org/download/08-minecraft_202302/01%20-%20Key.mp3", duration: "1:05" },
                     { title: "Subwoofer Lullaby", url: "https://archive.org/download/08-minecraft_202302/03%20-%20Subwoofer%20Lullaby.mp3", duration: "3:28" },
                     { title: "Living Mice", url: "https://archive.org/download/08-minecraft_202302/05%20-%20Living%20Mice.mp3", duration: "2:43" },
@@ -431,29 +456,27 @@
                     { title: "Sweden", url: "https://archive.org/download/08-minecraft_202302/18%20-%20Sweden.mp3", duration: "3:32" },
                     { title: "Danny", url: "https://archive.org/download/08-minecraft_202302/18%20-%20Danny.mp3", duration: "4:01" },
                     
-                    // Underwater
+                    //Underwater
                     { title: "Dragon Fish", url: "https://dn710202.ca.archive.org/0/items/dragon-fish-2018/Dragon%20Fish.mp3", duration: "6:12" },
                     { title: "Shuniji", url: "https://archive.org/download/shuniji-2018/Shuniji.mp3", duration: "4:04" },
                     { title: "Axolotl", url: "https://archive.org/download/axolotl-2018/Axolotl.mp3", duration: "5:03" },
                     
-                    // Creative
+                    //Creative
                     { title: "Blind Spots", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/04.%20Blind%20Spots.mp3", duration: "5:32" },
                     { title: "Biome Fest", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/08.%20Biome%20Fest.mp3", duration: "6:17" },
                     { title: "Haunt Muskie", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/10.%20Haunt%20Muskie.mp3", duration: "6:01" },
                     { title: "Aria Math", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/13.%20Aria%20Math.mp3", duration: "5:09" },
                     { title: "Taswell", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/16.%20Taswell.mp3", duration: "8:35" },
                     { title: "Dreiton", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/18.%20Dreiton.mp3", duration: "8:16" },
-
-                    // Nether
+                    
+                    //Nether
                     { title: "Dead Voxel", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/03.%20Dead%20Voxel.mp3", duration: "4:55" },
                     { title: "Concrete Halls", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/07.%20Concrete%20Halls.mp3", duration: "4:13" },
                     { title: "Warmth", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/11.%20Warmth.mp3", duration: "3:59" },
                     { title: "Ballad Of The Cats", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/15.%20Ballad%20of%20the%20Cats.mp3", duration: "4:35" },
-                
-                    // End
                     { title: "The End", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/19.%20The%20End.mp3", duration: "15:04" },
-
-                    // Music Discs
+                    
+                    //Music Discs
                     { title: "13", url: "https://archive.org/download/08-minecraft_202302/16%20-%20Thirteen.mp3", duration: "2:52" },
                     { title: "Cat", url: "https://archive.org/download/08-minecraft_202302/19%20-%20Cat.mp3", duration: "3:06" },
                     { title: "Dog", url: "https://archive.org/download/08-minecraft_202302/20%20-%20Dog.mp3", duration: "2:11" },
@@ -466,6 +489,23 @@
                     { title: "Mall", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/27.%20Mall.mp3", duration: "3:17" },
                     { title: "Blocks", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/28.%20Blocks.mp3", duration: "5:42" },
                     { title: "Far", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/29.%20Far.mp3", duration: "3:11" },
+                ]
+            },
+            {
+                id: "album-gazelle-zootopia",
+                title: "Zootopia - Gazelle",
+                artist: "Shakira/Gazelle",
+                year: "2016-2025",
+                tags: ["Movie"],
+                hidden: false,
+                realCover: "https://static.wikia.nocookie.net/disney/images/9/9a/Profile_-_Gazelle.jpeg/revision/latest?cb=20251016115018",
+                // PLAYLIST BACKGROUND IMAGE URL
+                bgImage: "https://static.wikia.nocookie.net/zootopia/images/6/62/Bright_Animalia.png/revision/latest?cb=20160427134414", 
+                dividers: {
+                },
+                tracks: [
+                    { title: "Try Everything", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
+                    { title: "Zoo", url: "https://archive.org/download/try-everything_202601/Zoo.mp3", duration: "3:11" },
                 ]
             }
         ];
@@ -504,9 +544,11 @@
         const scopeSelect = document.getElementById('playback-scope');
         const scopeWrapper = document.getElementById('scope-wrapper');
 
+        const mainContent = document.getElementById('main-content');
         const homeView = document.getElementById('home-view');
         const searchView = document.getElementById('search-view');
         const albumView = document.getElementById('album-view');
+        const albumHeaderBg = document.getElementById('album-header-bg');
         const albumsGrid = document.getElementById('albums-grid');
         
         const searchAlbumsGrid = document.getElementById('search-albums-grid');
@@ -520,6 +562,12 @@
             updateRepeatUI();
             setupProgressBarDragging();
             setupVolumeControls();
+
+            // Parallax effect for the background
+            mainContent.onscroll = () => {
+                const scroll = mainContent.scrollTop;
+                albumHeaderBg.style.transform = `translateY(${scroll * 0.4}px)`;
+            };
         }
 
         function setupVolumeControls() {
@@ -604,15 +652,18 @@
             homeView.classList.remove('hidden');
             searchView.classList.add('hidden');
             albumView.classList.add('hidden');
+            albumHeaderBg.style.backgroundImage = 'none';
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.getElementById('link-home').classList.add('active');
             previousView = 'home-view';
+            renderHomeAlbums(library);
         }
 
         function showSearch() {
             homeView.classList.add('hidden');
             searchView.classList.remove('hidden');
             albumView.classList.add('hidden');
+            albumHeaderBg.style.backgroundImage = 'none';
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.getElementById('link-search').classList.add('active');
             previousView = 'search-view';
@@ -643,14 +694,16 @@
 
         function performSearch() {
             const query = searchInput.value.toLowerCase();
-            const filteredAlbums = library.filter(a => {
+            const visibleLibrary = library.filter(a => !a.hidden);
+
+            const filteredAlbums = visibleLibrary.filter(a => {
                 const matchesText = a.title.toLowerCase().includes(query) || a.artist.toLowerCase().includes(query);
                 const matchesTag = currentSearchTag === 'all' || a.tags.includes(currentSearchTag);
                 return matchesText && matchesTag;
             });
 
             const matchingSongs = [];
-            library.forEach(album => {
+            visibleLibrary.forEach(album => {
                 const matchesTag = currentSearchTag === 'all' || album.tags.includes(currentSearchTag);
                 if (matchesTag) {
                     album.tracks.forEach((track, idx) => {
@@ -666,7 +719,8 @@
 
         function renderHomeAlbums(data) {
             albumsGrid.innerHTML = '';
-            data.forEach(album => {
+            const visibleAlbums = data.filter(album => !album.hidden);
+            visibleAlbums.forEach(album => {
                 albumsGrid.appendChild(createAlbumCard(album));
             });
         }
@@ -774,6 +828,14 @@
             searchView.classList.add('hidden');
             albumView.classList.remove('hidden');
             
+            // Apply Dynamic Background
+            if (album.bgImage) {
+                albumHeaderBg.style.backgroundImage = `url(${album.bgImage})`;
+                albumHeaderBg.style.display = 'block';
+            } else {
+                albumHeaderBg.style.display = 'none';
+            }
+
             document.getElementById('view-album-cover').src = album.realCover;
             document.getElementById('view-album-title').innerText = album.title;
             document.getElementById('view-album-info').innerText = `${album.artist} • ${album.year}`;
