@@ -276,7 +276,7 @@
                         <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Video Game">Video Game</button>
                         <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="TV Show">TV Show</button>
                         <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Movie">Movie</button>
-                        <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Lo-Fi">Lo-Fi</button>
+                        <button class="filter-pill px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10" data-tag="Character">Character</button>
                     </div>
 
                     <div id="search-results-container">
@@ -296,14 +296,15 @@
                 <button onclick="goBack()" class="mb-8 flex items-center text-gray-400 hover:text-white transition group">
                     <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i> Back
                 </button>
-                <div class="flex flex-col md:flex-row items-center md:items-end gap-10 mb-12">
+                <div class="flex flex-col md:flex-row items-center md:items-end gap-10 mb-8">
                     <div class="relative group shadow-2xl">
                         <img id="view-album-cover" src="" class="w-64 h-64 rounded-lg object-cover shadow-2xl">
                     </div>
                     <div class="text-center md:text-left flex-1">
                         <p class="text-sm font-bold text-red-600 uppercase tracking-widest mb-2" id="view-album-tags">Collection</p>
-                        <h1 id="view-album-title" class="text-4xl md:text-6xl font-black mb-4 tracking-tighter">Album Title</h1>
-                        <p id="view-album-info" class="text-gray-400 text-lg mb-6">Artist • Year</p>
+                        <h1 id="view-album-title" class="text-4xl md:text-6xl font-black mb-4 tracking-tighter leading-tight">Album Title</h1>
+                        <p id="view-album-description" class="text-gray-300 text-sm md:text-base mb-6 max-w-2xl line-clamp-3 md:line-clamp-none">Album description goes here.</p>
+                        <p id="view-album-info" class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-6">Artist • Year</p>
                         <div class="flex flex-wrap justify-center md:justify-start gap-4 items-center">
                             <button id="btn-play-album" class="bg-white text-black px-10 py-3 rounded-full font-bold hover:scale-105 transition shadow-xl flex items-center">
                                 <i class="fas fa-play mr-2"></i> Play
@@ -392,6 +393,7 @@
                 title: "Minecraft Soundtrack",
                 artist: "C418",
                 year: "2011-2018",
+                description: "The complete collection of C418's iconic scores for Minecraft, ranging from the original Volume Alpha to the expansive Volume Beta. This collection defines the soundscape of infinite creative potential.",
                 tags: ["Video Game"],
                 hidden: false,
                 realCover: "https://www.rw-designer.com/icon-image/5547-256x256x32.png",
@@ -462,7 +464,8 @@
                 title: "Zootopia - Gazelle",
                 artist: "Shakira/Gazelle",
                 year: "2016-2025",
-                tags: ["Movie"],
+                description: "The official soundtrack featuring Zootopia's greatest pop star, Gazelle. Includes the global hit 'Try Everything' and additional atmosphere from the bustling metropolis of Zootopia.",
+                tags: ["Movie", "Character"],
                 hidden: false,
                 realCover: "https://pbs.twimg.com/media/GxHJrcYacAEPLQh.jpg",
                 bgImage: "https://s.yimg.com/ny/api/res/1.2/2Ax37r7zQ7rOPgAw76mFZQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNDI7aD02OTk7Y2Y9d2VicA--/https://media.zenfs.com/en/comingsoon_net_477/1073ed2ccdce64ff3f0a77f39d18dd56", 
@@ -470,6 +473,47 @@
                 tracks: [
                     { title: "Try Everything", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
                     { title: "Zoo", url: "https://archive.org/download/try-everything_202601/Zoo.mp3", duration: "3:11" },
+                ]
+            },
+            {
+                id: "album-zootopia",
+                title: "Zootopia",
+                artist: "Michael Giacchino/Shakira",
+                year: "2016",
+                description: "Step into the sprawling metropolis where anyone can be anything. This soundtrack captures the pulse of a city built on hope, hustle, and harmony. From the sweeping, cinematic themes of Michael Giacchino to the high-energy pop anthems that define a generation.",
+                tags: ["Movie"],
+                hidden: false,
+                realCover: "https://m.media-amazon.com/images/I/81l4EtnLcFL._UF1000,1000_QL80_.jpg",
+                bgImage: "https://static01.nyt.com/images/2016/03/04/arts/04ZOOTROPIA1/04ZOOTROPIA1-facebookJumbo-v2.jpg", 
+                dividers: {},
+                tracks: [
+                    { title: "Stage Fright", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/midryubz/01%20Stage%20Fright.mp3", duration: "0:39" },
+                    { title: "Grey's uh-Mad at Me", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/tvuneicn/02%20Grey%27s%20Uh-Mad%20at%20Me.mp3", duration: "1:48"},
+                    { title: "Ticket to Write", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/udhbjtqy/05%20Ticket%20to%20Write.mp3", duration: "1:10"},
+                    { title: "Ticket to Write (Extended)", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/grrhnpnu/03%20Ticket%20to%20Write%20%28Extended%29.mp3", duration: "3:58"},
+                    { title: "Ticket to Write (No Chorus)", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/kpugudkp/04%20Ticket%20to%20Write%20%28No%20Chorus%29.mp3", duration: "1:08"},
+                    { title: "Foxy Fakeout", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/vicnicok/06%20Foxy%20Fakeout.mp3", duration: "2:13"},
+                    { title: "Jumbo Pop Hustle", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/lykcjmgx/07%20Jumbo%20Pop%20Hustle.mp3", duration: "1:55"},
+                    { title: "Walk and Stalk", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/ueoegswf/08%20Walk%20and%20Stalk.mp3", duration: "1:33"},
+                    { title: "Not a Real Cop", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/jeundfoe/09%20Not%20a%20Real%20Cop.mp3", duration: "1:37"},
+                    { title: "Hopps Goes (After) The Weasel", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/gtzrispv/10%20Hopps%20Goes%20%28After%29%20The%20Weasel.mp3", duration: "2:24"},
+                    { title: "The Naturalist", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/gwnygixo/11%20The%20Naturalist.mp3", duration: "3:15"},
+                    { title: "Work Slowly and Carry a Big Shtick", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/jzxpgnuk/13%20Work%20Slowly%20and%20Carry%20a%20Big%20Shtick.mp3", duration: "0:46"},
+                    { title: "Work Slowly and Carry a Big Shtick (Extended)", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/ebtrbjnp/12%20Work%20Slowly%20and%20Carry%20a%20Big%20Shtick%20%28Extended%29.mp3", duration: "2:11"},
+                    { title: "Mr. Big", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/qacnhwnx/14%20Mr.%20Big.mp3", duration: "2:53"},
+                    { title: "Case of the Manchas", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/yconalfs/15%20Case%20of%20the%20Manchas.mp3", duration: "4:08"},
+                    { title: "The Nick of Time", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/xiacmbwb/16%20The%20Nick%20of%20Time.mp3", duration: "5:13"},
+                    { title: "World's Worst Animal Shelter", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/uunfoeei/17%20World%27s%20Worst%20Animal%20Shelter.mp3", duration: "4:24"},
+                    { title: "Some of My Best Friends Are Predators", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/dsdojdqr/18%20Some%20of%20My%20Best%20Friends%20Are%20Predators.mp3", duration: "3:54"},
+                    { title: "A Bunny Can Go Savage", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/orrkymru/19%20A%20Bunny%20Can%20Go%20Savage.mp3", duration: "1:45"},
+                    { title: "Weasel Shakedown", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/bvbsjskx/20%20Weasel%20Shakedown.mp3", duration: "2:04"},
+                    { title: "Ramifications", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/izzvgsxh/21%20Ramifications.mp3", duration: "3:58"},
+                    { title: "Ewe Fell for It", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/twcvxamg/22%20Ewe%20Fell%20for%20It.mp3", duration: "6:49"},
+                    { title: "Three-Toe Bandito", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/vjkykgah/23%20Three-Toe%20Bandito.mp3", duration: "0:43"},
+                    { title: "Suite From Zootopia", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/kxjzxmra/25%20Suite%20From%20Zootopia.mp3", duration: "7:28"},
+                    { title: "Suite From Zootopia (Movie Version)", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/mmzlfuhb/24%20Suite%20From%20Zootopia%20%28Movie%20Version%29.mp3", duration: "8:58"},
+                    { title: "Try Everything", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
+
                 ]
             },
         ];
@@ -482,7 +526,8 @@
         let playbackScope = 'all';
         let currentSearchTag = 'all';
         let previousView = 'home-view';
-        let activeAlbumId = null;
+        let activeAlbumId = null; // Currently PLAYING album ID
+        let viewedAlbumId = null; // Currently VIEWED album ID
         let isDraggingProgress = false;
         let lastVolume = 0.7;
         let isMuted = false;
@@ -593,7 +638,7 @@
                     isPlaying = true;
                 }
             } catch (err) {
-                // Ignore AbortError as it's handled by the lock
+                // Ignore AbortError
             } finally {
                 isPlaybackPending = false;
                 updatePlayButton();
@@ -670,6 +715,7 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.getElementById('link-home').classList.add('active');
             previousView = 'home-view';
+            viewedAlbumId = null;
             renderHomeAlbums(library);
         }
 
@@ -681,6 +727,7 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.getElementById('link-search').classList.add('active');
             previousView = 'search-view';
+            viewedAlbumId = null;
             performSearch();
         }
 
@@ -817,23 +864,30 @@
         function showAlbum(albumId) {
             const album = library.find(a => a.id === albumId);
             if (!album) return;
+            viewedAlbumId = albumId;
             homeView.classList.add('hidden');
             searchView.classList.add('hidden');
             albumView.classList.remove('hidden');
+            
             if (album.bgImage) {
                 albumHeaderBg.style.backgroundImage = `url(${album.bgImage})`;
                 albumHeaderBg.style.display = 'block';
             } else {
                 albumHeaderBg.style.display = 'none';
             }
+            
             document.getElementById('view-album-cover').src = album.realCover;
             document.getElementById('view-album-title').innerText = album.title;
+            document.getElementById('view-album-description').innerText = album.description || "No description provided.";
             document.getElementById('view-album-info').innerText = `${album.artist} • ${album.year}`;
             document.getElementById('view-album-tags').innerText = (album.tags || []).join(' • ');
+            
             let totalAlbumSec = 0;
             album.tracks.forEach(t => totalAlbumSec += durationToSeconds(t.duration));
             document.getElementById('view-album-stats').innerText = `${album.tracks.length} Songs • ${secondsToDuration(totalAlbumSec)}`;
+            
             renderTracklist(album);
+            
             document.getElementById('btn-play-album').onclick = () => {
                 activeAlbumId = album.id;
                 currentPlaylist = albumToPlaylist(album);
@@ -849,6 +903,8 @@
         function renderTracklist(album) {
             const tracklist = document.getElementById('tracklist');
             tracklist.innerHTML = '';
+            
+            // Stats logic for dividers
             const sectionStats = {};
             if (album.dividers) {
                 const keys = Object.keys(album.dividers).map(Number).sort((a,b) => a-b);
@@ -859,6 +915,7 @@
                     sectionStats[start] = { count: slice.length, time: secondsToDuration(sec) };
                 });
             }
+
             album.tracks.forEach((track, index) => {
                 if (album.dividers && album.dividers[index]) {
                     const stats = sectionStats[index];
@@ -867,7 +924,10 @@
                     div.innerHTML = `<span>${album.dividers[index]}</span><span class="section-stats">${stats.count} songs • ${stats.time}</span>`;
                     tracklist.appendChild(div);
                 }
-                const isCurrent = activeAlbumId === album.id && currentTrackIndex === index;
+
+                // BUG FIX: Ensure the playing state only highlights if we're looking at the ACTIVE album
+                const isCurrent = (activeAlbumId === album.id) && (currentTrackIndex === index);
+                
                 const row = document.createElement('div');
                 row.className = `track-row grid grid-cols-[40px_1fr_90px] items-center px-4 py-3 group cursor-pointer ${isCurrent ? 'playing' : ''}`;
                 row.innerHTML = `
@@ -902,6 +962,8 @@
                 currentCover.classList.remove('opacity-0');
                 sidePlayingInfo.innerText = `${track.title} - ${track.artist}`;
                 updateScopeDropdown(track);
+                
+                // If we are viewing the album that is now playing (or changed track), refresh the highlights
                 updateUIHighlights();
                 
                 await audio.play();
@@ -915,8 +977,9 @@
         }
 
         function updateUIHighlights() {
-            if (!albumView.classList.contains('hidden')) {
-                const album = library.find(a => a.id === activeAlbumId);
+            // Only re-render the tracklist if we are currently viewing the active album
+            if (!albumView.classList.contains('hidden') && viewedAlbumId) {
+                const album = library.find(a => a.id === viewedAlbumId);
                 if (album) renderTracklist(album);
             }
         }
