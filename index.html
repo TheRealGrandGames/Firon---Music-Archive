@@ -252,6 +252,35 @@
         #progress-container.dragging #progress-bar {
             background: #ff4444;
         }
+
+        /* Tabs Styling */
+        .album-tab {
+            position: relative;
+            padding-bottom: 8px;
+            color: #666;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .album-tab:hover {
+            color: #ccc;
+        }
+        .album-tab.active {
+            color: white;
+        }
+        .album-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #ff0000;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -348,6 +377,12 @@
                     </div>
                 </div>
                 <div class="max-w-4xl">
+                    <!-- Album Tabs -->
+                    <div class="flex space-x-8 mb-6 border-b border-white/10">
+                        <div id="tab-all" class="album-tab active" onclick="switchAlbumTab('all')">All Tracks</div>
+                        <div id="tab-top" class="album-tab" onclick="switchAlbumTab('top')">Top Tracks</div>
+                    </div>
+                    
                     <div class="grid grid-cols-[40px_1fr_90px] px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-white/10 mb-2">
                         <span>#</span>
                         <span>Title</span>
@@ -432,6 +467,7 @@
                 dividers: {
                     0: "Main Menu", 4: "Survival", 16: "Underwater", 19: "Creative", 25: "Nether", 29: "End", 30: "Music Discs",
                 },
+                topTracks: [1, 2, 19, 23, 24, 14, 22, 10, 5, 12, 13, 11, 18, 26, 33, 41],
                 tracks: [
                     //Main Menu
                     { title: "Moog City 2", url: "https://archive.org/download/minecraft-volume-beta/Minecraft%20Volume%20Beta/06.%20Moog%20City%202.mp3", duration: "2:59" },
@@ -503,6 +539,7 @@
                 dividers: {
                     0: "Volume 1", 13: "Volume 2", 26: "Volume 3", 36: "Volume 4",
                 },
+                topTracks: [0, 1, 2, 3, 8, 16, 29, 36, 51, 54, 57],
                 tracks: [
                     //Volume 1
                     { title: "Overworld Day", url: "https://archive.org/download/05-underground/01%20Overworld%20Day.mp3", duration: "2:18" },
@@ -585,6 +622,7 @@
                 bgImage: "https://gameinformer.com/sites/default/files/styles/content_header_l/public/2025/10/21/ca6bbcdd/ss_a93fc3c20ad60320734eadb2b5821d7e0429587f.jpg.webp", 
                 dividers: {
                 },
+                topTracks: [14, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
                 tracks: [
                     { title: "Crazy Dave's Greeting", url: "https://archive.org/download/plants-vs.-zombies-ost-flac/Laura%20Shigihara%20-%20Plants%20vs.%20Zombies%20Original%20Soundtrack/01%20-%20Crazy%20Dave%27s%20Greeting.mp3", duration: "0:08" },
                     { title: "Crazy Dave (Intro Theme)", url: "https://archive.org/download/plants-vs.-zombies-ost-flac/Laura%20Shigihara%20-%20Plants%20vs.%20Zombies%20Original%20Soundtrack/02%20-%20Crazy%20Dave%20%28Intro%20Theme%29.mp3", duration: "1:27" },
@@ -630,6 +668,7 @@
                 dividers: {
                     0: "Universal Tracks", 5: "Baldi's Basics Classic Remastered", 14: "Baldi's Basics Plus",
                 },
+                topTracks: [0, 1, 2, 4, 5, 6, 8, 10, 12, 14, 15, 16, 17, 18, 19, 21, 22],
                 tracks: [
                     //Universal Tracks
                     { title: "BAD SUM", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/ttnjgfgp/14%20BAD%20SUM.mp3", duration: "1:05" },
@@ -675,6 +714,7 @@
                 dividers: {
                     0: "Volume I", 5: "Volume II", 11: "Volume III", 17: "Volume IV", 23: "Volume V",
                 },
+                topTracks: [0, 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29],
                 tracks: [
                     //Volume I
                     { title: "Dawn Of The Doors", url: "https://nu.vgmtreasurechest.com/soundtracks/doors-roblox-ost-2021/sclxfjes/01.%20Dawn%20Of%20The%20Doors.mp3", duration: "3:54" },
@@ -731,6 +771,7 @@
                 bgImage: "https://static0.polygonimages.com/wordpress/wp-content/uploads/chorus/uploads/chorus_asset/file/14383784/undertale.0.1487728067.png", 
                 dividers: {
                 },
+                topTracks: [0, 2, 4, 8, 9, 10, 12, 13, 15, 16, 17, 18, 22, 23, 24, 25, 26, 32, 37, 39, 44, 45, 47, 49, 50, 51, 54, 55, 56, 60, 66, 69, 73, 77, 78, 80, 81, 82, 86, 88, 90, 91, 93, 94, 99, 100],
                 tracks: [
                     { title: "Once Upon a Time", url: "https://archive.org/download/undertaleost_202004/Undertale%20-%20Lossless%20Soundtrack%20%28toby%20fox%29/toby%20fox%20-%20UNDERTALE%20Soundtrack%20-%2001%20Once%20Upon%20a%20Time.mp3", duration: "1:28" },
                     { title: "Start Menu", url: "https://archive.org/download/undertaleost_202004/Undertale%20-%20Lossless%20Soundtrack%20%28toby%20fox%29/toby%20fox%20-%20UNDERTALE%20Soundtrack%20-%2002%20Start%20Menu.mp3", duration: "0:32" },
@@ -848,6 +889,7 @@
                 dividers: {
                     0: "Chapter 1", 40: "Chapter 2", 87: "Chapter 3", 125: "Chapter 4",
                 },
+                topTracks: [0, 2, 3, 6, 7, 8, 9, 10, 12, 16, 18, 20, 23, 24, 29, 31, 32, 33, 38, 42, 44, 45, 49, 51, 52, 53, 55, 57, 58, 61, 62, 71, 78, 80, 81, 87, 88, 90, 97, 102, 106, 112, 113, 116, 124, 129, 135, 136, 137, 139, 144, 146, 149, 154, 155, 157, 159, 162, 164],
                 tracks: [
                     //Chapter 1
                     { title: "ANOTHER HIM", url: "https://archive.org/download/gs_toby-fox-deltarune-chapter-1-original-game-soundtrack/01%20ANOTHER%20HIM.mp3", duration: "0:48" },
@@ -1026,6 +1068,46 @@
 
 
             {
+                id: "album-monsters-inc",
+                title: "Monsters, Inc.",
+                artist: "Randy Newman",
+                year: "2001",
+                description: "",
+                tags: ["Movie"],
+                hidden: false,
+                realCover: "https://ia600501.us.archive.org/21/items/MonstersInc.Soundtrack/Monsters%2C_Inc._soundtrack_cover.jpg?cnt=0",
+                bgImage: "https://lumiere-a.akamaihd.net/v1/images/h_monstersinc_19751_5dfd98d2.jpeg?region=0,0,2048,878", 
+                dividers: {},
+                topTracks: [0, 1, 5, 7, 9, 14, 17, 19, 20, 21, 22],
+                tracks: [
+                    { title: "If I Didn't Have You", url: "https://archive.org/download/MonstersInc.Soundtrack/01%20If%20I%20Didn%27t%20Have%20You.mp3", duration: "3:41" },
+                    { title: "Monsters, Inc.", url: "https://archive.org/download/MonstersInc.Soundtrack/02%20Monsters%2C%20Inc..mp3", duration: "2:10" },
+                    { title: "School", url: "https://archive.org/download/MonstersInc.Soundtrack/03%20School.mp3", duration: "1:39" },
+                    { title: "Walk to Work", url: "https://archive.org/download/MonstersInc.Soundtrack/04%20Walk%20to%20Work.mp3", duration: "3:30" },
+                    { title: "Sulley and Mike", url: "https://archive.org/download/MonstersInc.Soundtrack/05%20Sulley%20and%20Mike.mp3", duration: "1:58" },
+                    { title: "Randall Appears", url: "https://archive.org/download/MonstersInc.Soundtrack/06%20Randall%20Appears.mp3", duration: "0:50" },
+                    { title: "Enter the Heroes", url: "https://archive.org/download/MonstersInc.Soundtrack/07%20Enter%20the%20Heroes.mp3", duration: "1:04" },
+                    { title: "The Scare Floor", url: "https://archive.org/download/MonstersInc.Soundtrack/08%20The%20Scare%20Floor.mp3", duration: "2:41" },
+                    { title: "Oh, Celia!", url: "https://archive.org/download/MonstersInc.Soundtrack/09%20Oh%2C%20Celia%21.mp3", duration: "1:09" },
+                    { title: "Boo's Adventures in Monstropolis", url: "https://archive.org/download/MonstersInc.Soundtrack/10%20Boo%27s%20Adventures%20in%20Monstropolis.mp3", duration: "6:23" },
+                    { title: "Boo's Tired", url: "https://archive.org/download/MonstersInc.Soundtrack/11%20Boo%27s%20Tired.mp3", duration: "1:03" },
+                    { title: "Putting Boo Back", url: "https://archive.org/download/MonstersInc.Soundtrack/12%20Putting%20Boo%20Back.mp3", duration: "2:22" },
+                    { title: "Boo Escapes", url: "https://archive.org/download/MonstersInc.Soundtrack/13%20Boo%20Escapes.mp3", duration: "0:53" },
+                    { title: "Celia's Mad", url: "https://archive.org/download/MonstersInc.Soundtrack/14%20Celia%27s%20Mad.mp3", duration: "1:41" },
+                    { title: "Boo Is a Cube", url: "https://archive.org/download/MonstersInc.Soundtrack/15%20Boo%20Is%20a%20Cube.mp3", duration: "2:19" },
+                    { title: "Mike's In Trouble", url: "https://archive.org/download/MonstersInc.Soundtrack/16%20Mike%27s%20In%20Trouble.mp3", duration: "2:20" },
+                    { title: "The Scream Extractor", url: "https://archive.org/download/MonstersInc.Soundtrack/17%20The%20Scream%20Extractor.mp3", duration: "2:13" },
+                    { title: "Sulley Scares Boo", url: "https://archive.org/download/MonstersInc.Soundtrack/18%20Sulley%20Scares%20Boo.mp3", duration: "1:10" },
+                    { title: "Exile", url: "https://archive.org/download/MonstersInc.Soundtrack/19%20Exile.mp3", duration: "2:18" },
+                    { title: "Randall's Attack", url: "https://archive.org/download/MonstersInc.Soundtrack/20%20Randall%27s%20Attack.mp3", duration: "2:23" },
+                    { title: "The Ride of the Doors", url: "https://archive.org/download/MonstersInc.Soundtrack/21%20The%20Ride%20of%20the%20Doors.mp3", duration: "5:08" },
+                    { title: "Waternoose Is Waiting", url: "https://archive.org/download/MonstersInc.Soundtrack/22%20Waternoose%20Is%20Waiting.mp3", duration: "3:14" },
+                    { title: "Boo's Going Home", url: "https://archive.org/download/MonstersInc.Soundtrack/23%20Boo%27s%20Going%20Home.mp3", duration: "3:35" },
+                    { title: "Kitty", url: "https://archive.org/download/MonstersInc.Soundtrack/24%20Kitty.mp3", duration: "1:21" },
+                    { title: "If I Didn't Have You", url: "https://archive.org/download/MonstersInc.Soundtrack/25%20If%20I%20Didn%27t%20Have%20You.mp3", duration: "3:39" },
+                ]
+            },
+            {
                 id: "album-zootopia",
                 title: "Zootopia",
                 artist: "Michael Giacchino/Shakira",
@@ -1036,6 +1118,7 @@
                 realCover: "https://m.media-amazon.com/images/I/81l4EtnLcFL._UF1000,1000_QL80_.jpg",
                 bgImage: "https://static01.nyt.com/images/2016/03/04/arts/04ZOOTROPIA1/04ZOOTROPIA1-facebookJumbo-v2.jpg", 
                 dividers: {},
+                topTracks: [25, 13, 15, 6, 23, 18, 19], // Try Everything, Mr Big, Nick of Time, etc.
                 tracks: [
                     { title: "Stage Fright", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/midryubz/01%20Stage%20Fright.mp3", duration: "0:39" },
                     { title: "Grey's uh-Mad at Me", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/tvuneicn/02%20Grey%27s%20Uh-Mad%20at%20Me.mp3", duration: "1:48"},
@@ -1076,6 +1159,7 @@
                 realCover: "https://upload.wikimedia.org/wikipedia/en/6/6e/Zootopia_2_%28Original_Motion_Picture_Soundtrack%29.jpeg",
                 bgImage: "https://statcdn.fandango.com/MPX/image/NBCU_Fandango/514/639/thumb_74C7AB2A-1E02-4104-AA36-6D7FCFC2046C.jpg", 
                 dividers: {},
+                topTracks: [0, 1, 2, 7, 8, 9, 10, 12, 13, 19, 21, 22],
                 tracks: [
                     { title: "Zootopening", url: "https://archive.org/download/zootopia-2-suite/Zootopening.mp3", duration: "0:59" },
                     { title: "The Old Zoo Review", url: "https://archive.org/download/zootopia-2-suite/The%20Old%20Zoo%20Review.mp3", duration: "1:56"},
@@ -1131,6 +1215,7 @@
         let previousView = 'home-view';
         let activeAlbumId = null;
         let viewedAlbumId = null;
+        let currentAlbumTab = 'all'; // New state for tabs
         let isDraggingProgress = false;
         let lastVolume = 0.7;
         let isMuted = false;
@@ -1412,6 +1497,9 @@
             const album = library.find(a => a.id === albumId);
             if (!album) return;
             viewedAlbumId = albumId;
+            currentAlbumTab = 'all'; // Reset to "All" when opening a new album
+            updateAlbumTabUI();
+
             homeView.classList.add('hidden'); searchView.classList.add('hidden'); albumView.classList.remove('hidden');
             if (album.bgImage) { albumHeaderBg.style.backgroundImage = `url(${album.bgImage})`; albumHeaderBg.style.display = 'block'; } else { albumHeaderBg.style.display = 'none'; }
             document.getElementById('view-album-cover').src = album.realCover;
@@ -1426,11 +1514,32 @@
             document.getElementById('btn-shuffle-album').onclick = () => { activeAlbumId = album.id; currentPlaylist = albumToPlaylist(album); isShuffle = true; shuffleBtn.classList.add('control-active'); playTrack(Math.floor(Math.random()*currentPlaylist.length)); };
         }
 
+        // Tab Switching Logic
+        function switchAlbumTab(tab) {
+            if (currentAlbumTab === tab) return;
+            currentAlbumTab = tab;
+            updateAlbumTabUI();
+            const album = library.find(a => a.id === viewedAlbumId);
+            if (album) renderTracklist(album);
+        }
+        function updateAlbumTabUI() {
+            document.getElementById('tab-all').classList.toggle('active', currentAlbumTab === 'all');
+            document.getElementById('tab-top').classList.toggle('active', currentAlbumTab === 'top');
+        }
+
         function renderTracklist(album) {
             const tracklist = document.getElementById('tracklist');
             tracklist.innerHTML = '';
+
+            // Filter tracks if "Top Tracks" tab is active
+            let tracksToDisplay = album.tracks.map((t, i) => ({...t, originalIndex: i}));
+            if (currentAlbumTab === 'top') {
+                const topIndices = album.topTracks || [];
+                tracksToDisplay = tracksToDisplay.filter(t => topIndices.includes(t.originalIndex));
+            }
+
             const sectionStats = {};
-            if (album.dividers) {
+            if (album.dividers && currentAlbumTab === 'all') {
                 const keys = Object.keys(album.dividers).map(Number).sort((a,b) => a-b);
                 keys.forEach((start, i) => {
                     const end = keys[i+1] || album.tracks.length;
@@ -1439,8 +1548,11 @@
                     sectionStats[start] = { count: slice.length, time: secondsToDuration(sec) };
                 });
             }
-            album.tracks.forEach((track, index) => {
-                if (album.dividers && album.dividers[index]) {
+            tracksToDisplay.forEach((track) => {
+                const index = track.originalIndex;
+                
+                // Only show dividers in "All" tab
+                if (currentAlbumTab === 'all' && album.dividers && album.dividers[index]) {
                     const stats = sectionStats[index];
                     const div = document.createElement('div');
                     div.className = "section-divider";
@@ -1462,6 +1574,10 @@
                 row.onclick = () => { activeAlbumId = album.id; currentPlaylist = albumToPlaylist(album); playTrack(index); };
                 tracklist.appendChild(row);
             });
+
+            if (tracksToDisplay.length === 0) {
+                tracklist.innerHTML = '<div class="py-10 text-center text-gray-500 text-sm italic">No top tracks for this album.</div>';
+            }
         }
 
         async function playTrack(index) {
