@@ -1630,19 +1630,32 @@
         }
 
         function nextTrack() {
-            const allowed = getFilteredIndices();
+            const album = library.find(a => a.id === activeAlbumId);
+            let allowed = getFilteredIndices();
+            
+            // NEW: If Top Tracks tab is open, only play from that list
+            const isTopTracksActive = !albumView.classList.contains('hidden') && 
+                                     viewedAlbumId === activeAlbumId && 
+                                     currentAlbumTab === 'top';
+
+            if (isTopTracksActive && album && album.topTracks) {
+                // Filter the allowed list further to only include top tracks
+                allowed = allowed.filter(idx => album.topTracks.includes(idx));
+            }
+
             if (allowed.length === 0) return;
+            
             const currIdxInAllowed = allowed.indexOf(currentTrackIndex);
             
             if (isShuffle) {
                 playTrack(allowed[Math.floor(Math.random() * allowed.length)]);
-            } else if (currIdxInAllowed < allowed.length - 1) {
-                // Next track in same playlist/scope
+            } else if (currIdxInAllowed !== -1 && currIdxInAllowed < allowed.length - 1) {
+                // Next track in same playlist/scope/subset
                 playTrack(allowed[currIdxInAllowed + 1]);
             } else {
-                // Reached end of playlist/scope
+                // Reached end of playlist/scope/subset
                 if (repeatMode === 1) {
-                    playTrack(allowed[0]); // Loop album
+                    playTrack(allowed[0]); // Loop current subset
                 } else if (repeatMode === 0) {
                     // Move to next album in Home list
                     moveToNextAlbum();
@@ -1663,10 +1676,29 @@
 
         function prevTrack() {
             if (audio.currentTime > 3) { audio.currentTime = 0; return; }
-            const allowed = getFilteredIndices();
+            
+            const album = library.find(a => a.id === activeAlbumId);
+            let allowed = getFilteredIndices();
+            
+            // NEW: Context awareness for Top Tracks
+            const isTopTracksActive = !albumView.classList.contains('hidden') && 
+                                     viewedAlbumId === activeAlbumId && 
+                                     currentAlbumTab === 'top';
+
+            if (isTopTracksActive && album && album.topTracks) {
+                allowed = allowed.filter(idx => album.topTracks.includes(idx));
+            }
+
             if (allowed.length === 0) return;
+            
             const curr = allowed.indexOf(currentTrackIndex);
-            playTrack(allowed[(curr - 1 + allowed.length) % allowed.length]);
+            // If current song isn't in the "Top" list (e.g. you switched tabs mid-song), 
+            // clicking back will just go to the first song of the top list.
+            if (curr === -1) {
+                playTrack(allowed[0]);
+            } else {
+                playTrack(allowed[(curr - 1 + allowed.length) % allowed.length]);
+            }
         }
 
         shuffleBtn.onclick = () => { isShuffle = !isShuffle; shuffleBtn.classList.toggle('control-active', isShuffle); };
