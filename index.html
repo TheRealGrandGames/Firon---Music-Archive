@@ -534,7 +534,7 @@
                 description: "Dig, Fight, Build, and Listen. The Terraria soundtrack is an iconic staple of the indie gaming world. Featuring the nostalgic \"Overworld Day\" theme and the heart-pounding intensity of \"Boss 2,\" this OST captures the magic of a world that is constantly changing. It’s the perfect companion for builders and slayers alike.",
                 tags: ["Video Game"],
                 hidden: false,
-                realCover: "https://i.scdn.co/image/ab67616d0000b27379a9be8af1193f50b28f7a54",
+                realCover: "https://ia600506.us.archive.org/1/items/05-underground/a0952647270_16.jpg?cnt=0",
                 bgImage: "https://cdn.mos.cms.futurecdn.net/Ui53UJ5D3yY2pd5tQD4VWG.jpg", 
                 dividers: {
                     0: "Volume 1", 13: "Volume 2", 26: "Volume 3", 36: "Volume 4",
@@ -1075,7 +1075,7 @@
                 description: "Welcome to Monstropolis! The Monsters, Inc. soundtrack is a vibrant, brass-heavy celebration of 1940s jazz and big-band swing. Composed by the legendary Randy Newman, the score captures the hustle and bustle of the factory floor with snappy percussion, walking basslines, and virtuosic woodwind runs.",
                 tags: ["Movie"],
                 hidden: false,
-                realCover: "https://upload.wikimedia.org/wikipedia/en/f/ff/Monsters%2C_Inc._soundtrack_cover.jpg",
+                realCover: "https://ia600501.us.archive.org/21/items/MonstersInc.Soundtrack/Monsters%2C_Inc._soundtrack_cover.jpg?cnt=0",
                 bgImage: "https://lumiere-a.akamaihd.net/v1/images/h_monstersinc_19751_5dfd98d2.jpeg?region=0,0,2048,878", 
                 dividers: {},
                 topTracks: [0, 1, 5, 7, 9, 14, 17, 19, 20, 21, 22],
@@ -1632,8 +1632,33 @@
         function nextTrack() {
             const allowed = getFilteredIndices();
             if (allowed.length === 0) return;
-            if (isShuffle) playTrack(allowed[Math.floor(Math.random() * allowed.length)]);
-            else { const curr = allowed.indexOf(currentTrackIndex); playTrack(allowed[(curr + 1) % allowed.length]); }
+            const currIdxInAllowed = allowed.indexOf(currentTrackIndex);
+            
+            if (isShuffle) {
+                playTrack(allowed[Math.floor(Math.random() * allowed.length)]);
+            } else if (currIdxInAllowed < allowed.length - 1) {
+                // Next track in same playlist/scope
+                playTrack(allowed[currIdxInAllowed + 1]);
+            } else {
+                // Reached end of playlist/scope
+                if (repeatMode === 1) {
+                    playTrack(allowed[0]); // Loop album
+                } else if (repeatMode === 0) {
+                    // Move to next album in Home list
+                    moveToNextAlbum();
+                }
+            }
+        }
+
+        function moveToNextAlbum() {
+            const visibleAlbums = library.filter(a => !a.hidden);
+            const currentIdx = visibleAlbums.findIndex(a => a.id === activeAlbumId);
+            if (currentIdx !== -1 && currentIdx < visibleAlbums.length - 1) {
+                const nextAlbum = visibleAlbums[currentIdx + 1];
+                activeAlbumId = nextAlbum.id;
+                currentPlaylist = albumToPlaylist(nextAlbum);
+                playTrack(0);
+            }
         }
 
         function prevTrack() {
