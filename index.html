@@ -1574,10 +1574,12 @@
             try {
                 if (isPlaying) {
                     audio.pause();
+                    document.title = "Firon - Music Archive";
                     isPlaying = false;
                 } else {
                     isPlaybackPending = true;
                     await audio.play();
+                    document.title = `${tracks[currentTrackIndex].title} - Firon`;
                     isPlaying = true;
                 }
             } catch (err) {} finally {
