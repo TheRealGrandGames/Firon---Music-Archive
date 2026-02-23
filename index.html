@@ -137,6 +137,47 @@
             text-transform: none;
             letter-spacing: normal;
         }
+        .speed-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .speed-container.hidden {
+            display: none;
+        }
+        .speed-container select {
+            appearance: none;
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 4px 28px 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .speed-container select option {
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .speed-container select:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .speed-container::after {
+            content: "\f0d7";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 10px;
+            font-size: 10px;
+            color: #666;
+            pointer-events: none;
+        }
         .scope-container {
             position: relative;
             display: flex;
@@ -191,6 +232,15 @@
             min-width: 60px;
             text-align: right;
             font-family: monospace;
+        }
+        .sidebar-version {
+            text-align: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin: 20px 0;
         }
 
         #album-header-bg {
@@ -252,6 +302,13 @@
         #progress-container.dragging #progress-bar {
             background: #ff4444;
         }
+        #current-title:hover, #current-artist:hover {
+            text-decoration: underline;
+        }
+        #current-cover:hover {
+            filter: brightness(1.2);
+            transition: filter 0.2s;
+        }
 
         /* Tabs Styling */
         .album-tab {
@@ -286,6 +343,19 @@
 <body class="h-screen flex flex-col">
 
     <div class="flex flex-1 overflow-hidden">
+        <!-- Mobile Header -->
+        <div class="md:hidden flex items-center justify-between p-4 bg-[#1a1a1a] border-b border-white/10 relative z-50">
+            <div class="flex items-center" onclick="showHome()">
+                <div class="w-7 h-7 bg-red-600 rounded flex items-center justify-center mr-2">
+                    <i class="fas fa-archive text-white text-xs"></i>
+                </div>
+                <span class="font-bold tracking-tighter">Firon</span>
+            </div>
+            <button onclick="toggleSidebar()" class="text-white text-xl p-2">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
         <aside class="w-64 flex flex-col p-4 space-y-4 hidden md:flex border-r border-white/10">
             <div class="flex items-center px-2 mb-6 cursor-pointer" onclick="showHome()">
                 <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center mr-2">
@@ -307,12 +377,21 @@
                 <p class="text-xs text-gray-400 mb-2 font-bold uppercase tracking-widest">Archive Status</p>
                 <p class="text-sm font-bold truncate" id="side-playing-info">Offline</p>
             </div>
+
+            <div class="sidebar-version">
+                v1.5
+            </div>
         </aside>
 
         <main id="main-content" class="flex-1 overflow-y-auto pb-48 md:pb-32 bg-gradient-to-b from-[#1a1a1a] to-[#030303] relative">
             <div id="album-header-bg"></div>
 
             <div id="home-view" class="p-4 md:p-8 relative z-10">
+                <div class="flex items-center justify-between mb-6">
+                    <button onclick="playSurprise()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition flex items-center shadow-lg">
+                        <i class="fas fa-dice mr-2"></i> Surprise Me
+                    </button>
+                </div>
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Recent Collections</h2>
@@ -406,12 +485,12 @@
         <div class="player-layout max-w-screen-2xl mx-auto">
             <div class="player-meta flex items-center md:w-1/3 min-w-[280px] md:min-w-[350px]">
                 <div class="relative w-12 h-12 md:w-14 md:h-14 mr-3 md:mr-4 flex-shrink-0">
-                    <img id="current-cover" src="" alt="Cover" class="w-full h-full rounded shadow-2xl object-cover opacity-0 transition-opacity duration-500">
+                    <img id="current-cover" onclick="navigateToCurrentAlbum()" class="w-full h-full rounded shadow-2xl object-cover opacity-0 transition-opacity duration-500 cursor-pointer pointer-events-auto" alt="Cover">
                 </div>
                 <div class="overflow-hidden flex flex-col justify-center">
-                    <h4 id="current-title" class="font-bold truncate text-xs md:text-sm leading-tight mb-1">Pick a record</h4>
+                    <h4 id="current-title" onclick="navigateToCurrentAlbum()" class="cursor-pointer hover:underline font-bold truncate text-xs md:text-sm leading-tight mb-1">Pick a record</h4>
                     <div class="flex items-center space-x-3 justify-center md:justify-start">
-                        <p id="current-artist" class="text-gray-400 text-[10px] md:text-xs truncate max-w-[120px]">Firon Archive</p>
+                        <p id="current-artist" onclick="navigateToCurrentAlbum()" class="cursor-pointer hover:underline text-gray-400 text-[10px] md:text-xs truncate max-w-[120px]">Firon Archive</p>
                         <div id="scope-wrapper" class="scope-container hidden">
                             <select id="playback-scope">
                                 <option value="all">All Music</option>
@@ -439,6 +518,19 @@
             </div>
 
             <div class="volume-controls hidden md:flex items-center justify-end w-1/3 space-x-6">
+                <div class="speed-container" title="Playback Speed">
+                    <select id="speed-control">
+                        <option value="0.25">0.25x</option>
+                        <option value="0.5">0.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="1.75">1.75x</option>
+                        <option value="2">2x</option>
+                        <option value="3">3x</option>
+                    </select>
+                </div>
                 <div class="flex items-center group">
                     <button id="btn-mute" class="hover:text-white transition-colors text-gray-500 focus:outline-none">
                         <i id="mute-icon" class="fas fa-volume-up mr-3 w-5 text-center"></i>
@@ -1600,31 +1692,30 @@
                 dividers: {},
                 topTracks: [0, 1, 5, 7, 9, 14, 17, 19, 20, 21, 22],
                 tracks: [
-                    { title: "If I Didn't Have You", url: "https://archive.org/download/MonstersInc.Soundtrack/01%20If%20I%20Didn%27t%20Have%20You.mp3", duration: "3:41" },
-                    { title: "Monsters, Inc.", url: "https://archive.org/download/MonstersInc.Soundtrack/02%20Monsters%2C%20Inc..mp3", duration: "2:10" },
-                    { title: "School", url: "https://archive.org/download/MonstersInc.Soundtrack/03%20School.mp3", duration: "1:39" },
-                    { title: "Walk to Work", url: "https://archive.org/download/MonstersInc.Soundtrack/04%20Walk%20to%20Work.mp3", duration: "3:30" },
-                    { title: "Sulley and Mike", url: "https://archive.org/download/MonstersInc.Soundtrack/05%20Sulley%20and%20Mike.mp3", duration: "1:58" },
-                    { title: "Randall Appears", url: "https://archive.org/download/MonstersInc.Soundtrack/06%20Randall%20Appears.mp3", duration: "0:50" },
-                    { title: "Enter the Heroes", url: "https://archive.org/download/MonstersInc.Soundtrack/07%20Enter%20the%20Heroes.mp3", duration: "1:04" },
-                    { title: "The Scare Floor", url: "https://archive.org/download/MonstersInc.Soundtrack/08%20The%20Scare%20Floor.mp3", duration: "2:41" },
-                    { title: "Oh, Celia!", url: "https://archive.org/download/MonstersInc.Soundtrack/09%20Oh%2C%20Celia%21.mp3", duration: "1:09" },
-                    { title: "Boo's Adventures in Monstropolis", url: "https://archive.org/download/MonstersInc.Soundtrack/10%20Boo%27s%20Adventures%20in%20Monstropolis.mp3", duration: "6:23" },
-                    { title: "Boo's Tired", url: "https://archive.org/download/MonstersInc.Soundtrack/11%20Boo%27s%20Tired.mp3", duration: "1:03" },
-                    { title: "Putting Boo Back", url: "https://archive.org/download/MonstersInc.Soundtrack/12%20Putting%20Boo%20Back.mp3", duration: "2:22" },
-                    { title: "Boo Escapes", url: "https://archive.org/download/MonstersInc.Soundtrack/13%20Boo%20Escapes.mp3", duration: "0:53" },
-                    { title: "Celia's Mad", url: "https://archive.org/download/MonstersInc.Soundtrack/14%20Celia%27s%20Mad.mp3", duration: "1:41" },
-                    { title: "Boo Is a Cube", url: "https://archive.org/download/MonstersInc.Soundtrack/15%20Boo%20Is%20a%20Cube.mp3", duration: "2:19" },
-                    { title: "Mike's In Trouble", url: "https://archive.org/download/MonstersInc.Soundtrack/16%20Mike%27s%20In%20Trouble.mp3", duration: "2:20" },
-                    { title: "The Scream Extractor", url: "https://archive.org/download/MonstersInc.Soundtrack/17%20The%20Scream%20Extractor.mp3", duration: "2:13" },
-                    { title: "Sulley Scares Boo", url: "https://archive.org/download/MonstersInc.Soundtrack/18%20Sulley%20Scares%20Boo.mp3", duration: "1:10" },
-                    { title: "Exile", url: "https://archive.org/download/MonstersInc.Soundtrack/19%20Exile.mp3", duration: "2:18" },
-                    { title: "Randall's Attack", url: "https://archive.org/download/MonstersInc.Soundtrack/20%20Randall%27s%20Attack.mp3", duration: "2:23" },
-                    { title: "The Ride of the Doors", url: "https://archive.org/download/MonstersInc.Soundtrack/21%20The%20Ride%20of%20the%20Doors.mp3", duration: "5:08" },
-                    { title: "Waternoose Is Waiting", url: "https://archive.org/download/MonstersInc.Soundtrack/22%20Waternoose%20Is%20Waiting.mp3", duration: "3:14" },
-                    { title: "Boo's Going Home", url: "https://archive.org/download/MonstersInc.Soundtrack/23%20Boo%27s%20Going%20Home.mp3", duration: "3:35" },
-                    { title: "Kitty", url: "https://archive.org/download/MonstersInc.Soundtrack/24%20Kitty.mp3", duration: "1:21" },
-                    { title: "If I Didn't Have You", url: "https://archive.org/download/MonstersInc.Soundtrack/25%20If%20I%20Didn%27t%20Have%20You.mp3", duration: "3:39" },
+                    { title: "Monsters, Inc.", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/01.%20%20Main%20Theme%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:10" },
+                    { title: "School", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/02.%20School%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:39" },
+                    { title: "Walk to Work", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/03.%20Walk%20To%20Work%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "3:30" },
+                    { title: "Sulley and Mike", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/05.%20Sulley%20and%20Mike%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:58" },
+                    { title: "Randall Appears", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/04.%20Randall%20Appears%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "0:50" },
+                    { title: "Enter the Heroes", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/06.%20Enter%20the%20Heroes%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:04" },
+                    { title: "The Scare Floor", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/07.%20The%20Scare%20Floor%20-%20Monsters%2C%20Inc%20OST%204.mp3", duration: "2:41" },
+                    { title: "Oh, Celia!", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/08.%20Oh%2C%20Celia%21%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:09" },
+                    { title: "Boo's Adventures in Monstropolis", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/09.%20Boo%27s%20Adventures%20in%20Monstropolis%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "6:23" },
+                    { title: "Boo's Tired", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/10.%20Boo%27s%20Tired%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:03" },
+                    { title: "Putting Boo Back", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/11.%20Putting%20Boo%20Back%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:22" },
+                    { title: "Boo Escapes", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/12.%20Boo%20Escapes%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "0:53" },
+                    { title: "Celia's Mad", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/13.%20Celia%27s%20Mad%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:41" },
+                    { title: "Boo Is a Cube", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/14.%20Boo%20Is%20a%20Cube%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:19" },
+                    { title: "Mike's In Trouble", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/15.%20Mike%27s%20in%20Trouble%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:20" },
+                    { title: "The Scream Extractor", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/16.%20The%20Scream%20Extractor%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:13" },
+                    { title: "Sulley Scares Boo", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/17.%20Sulley%20Scares%20Boo%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:10" },
+                    { title: "Exile", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/18.%20Exile%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:18" },
+                    { title: "Randall's Attack", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/19.%20Randall%27s%20Attack%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "2:23" },
+                    { title: "The Ride of the Doors", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/20.%20The%20Ride%20of%20the%20Doors%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "5:08" },
+                    { title: "Waternoose Is Waiting", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/21.%20Waternoose%20is%20Waiting%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "3:14" },
+                    { title: "Boo's Going Home", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/22.%20Boo%27s%20Going%20Home%20-%20Monsters%2C%20Inc%20OST%204.mp3", duration: "3:35" },
+                    { title: "Kitty", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/23.%20Kitty%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "1:21" },
+                    { title: "If I Didn't Have You", url: "https://archive.org/download/09.-boos-adventures-in-monstropolis-monsters-inc-ost/If%20I%20Didn%27t%20Have%20You%20%28Randy%20Newman%29%20-%20Monsters%2C%20Inc%20OST.mp3", duration: "3:39" },
                 ]
             },
             {
@@ -1720,7 +1811,7 @@
                 dividers: {},
                 tracks: [
                     { title: "Try Everything", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
-                    { title: "Try Everything (Instrumental)", url: "https://archive.org/download/try-everything-instrumental/Try_Everything%20INSTRUMENTAL.mp3", duration: "3:20" },
+                    { title: "Try Everything (Instrumental)", url: "https://archive.org/download/try-everything-instrumental/Try_Everything%20INSTRUMENTAL.mp3", duration: "3:17" },
                     { title: "Zoo", url: "https://archive.org/download/try-everything_202601/Zoo.mp3", duration: "3:11" },
                     { title: "Zoo (End Credits Version)", url: "https://archive.org/download/zoo-instrumental-end-credits-version/Zoo%20%28End%20Credits%20Version%29.mp3", duration: "3:25" },
                     { title: "Zoo (End Credits Version + Instrumental)", url: "https://archive.org/download/zoo-instrumental-end-credits-version/Zoo%20Instrumental%20%28End%20Credits%20Version%29.mp3", duration: "3:27" },
@@ -1743,6 +1834,7 @@
         let lastVolume = 0.7;
         let isMuted = false;
         let isPlaybackPending = false;
+        let currentPlaybackRate = 1;
 
         const audio = document.getElementById('main-audio');
         const playPauseBtn = document.getElementById('btn-play-pause');
@@ -1773,6 +1865,7 @@
         const searchAlbumsGrid = document.getElementById('search-albums-grid');
         const searchSongsGrid = document.getElementById('search-songs-grid');
         const filterContainer = document.getElementById('filter-container');
+        const speedControl = document.getElementById('speed-control');
 
         function init() {
             audio.volume = 0.7;
@@ -1782,9 +1875,31 @@
             setupProgressBarDragging();
             setupVolumeControls();
             setupKeybinds();
+            setupSpeedControl();
             mainContent.onscroll = () => {
                 const scroll = mainContent.scrollTop;
                 albumHeaderBg.style.transform = `translateY(${scroll * 0.4}px)`;
+            };
+        }
+
+        function navigateToCurrentAlbum() {
+            // Get the albumId from the track currently in the playlist
+            const currentTrack = currentPlaylist[currentTrackIndex];
+            if (currentTrack && currentTrack.albumId) {
+                showAlbum(currentTrack.albumId);
+            }
+        }
+
+        function setupSpeedControl() {
+            speedControl.onchange = (e) => {
+                currentPlaybackRate = parseFloat(e.target.value);
+                audio.playbackRate = currentPlaybackRate;
+            };
+            // Ensure rate persists between track changes
+            audio.onratechange = () => {
+                if (audio.playbackRate !== currentPlaybackRate) {
+                    audio.playbackRate = currentPlaybackRate;
+                }
             };
         }
 
@@ -1812,6 +1927,22 @@
             });
         }
 
+        function playSurprise() {
+            // 1. Pick a random album from the library
+            const randomAlbum = library[Math.floor(Math.random() * library.length)];
+
+            // 2. Pick a random track from that album
+            const randomTrackIndex = Math.floor(Math.random() * randomAlbum.tracks.length);
+
+            // 3. Set the context (playlist) to that album and play
+            activeAlbumId = randomAlbum.id;
+            currentPlaylist = albumToPlaylist(randomAlbum);
+            isShuffle = false; 
+            shuffleBtn.classList.remove('control-active');
+
+            playTrack(randomTrackIndex);
+        }
+
         function toggleMute() {
             isMuted = !isMuted;
             if (isMuted) {
@@ -1826,22 +1957,27 @@
         }
 
         async function togglePlay() {
-            if (!audio.src || isPlaybackPending) return;
-            try {
-                if (isPlaying) {
-                    audio.pause();
-                    document.title = "Firon - Music Archive";
-                    isPlaying = false;
-                } else {
-                    isPlaybackPending = true;
-                    await audio.play();
-                    document.title = `${tracks[currentTrackIndex].title} - Firon`;
-                    isPlaying = true;
-                }
-            } catch (err) {} finally {
-                isPlaybackPending = false;
-                updatePlayButton();
-            }
+        if (!audio.src) return; // Removed isPlaybackPending from the guard
+        
+          if (isPlaying) {
+              audio.pause();
+              isPlaying = false; // Update state immediately
+              document.title = "Firon - Music Archive";
+              updatePlayButton();
+          } else {
+              if (isPlaybackPending) return; // Only guard the play action
+              try {
+                  isPlaybackPending = true;
+                  await audio.play();
+                  isPlaying = true;
+                  document.title = `${currentPlaylist[currentTrackIndex].title} - Firon`;
+              } catch (err) {
+                  console.error("Playback failed", err);
+              } finally {
+                  isPlaybackPending = false;
+                  updatePlayButton();
+              }
+          }
         }
 
         function setupVolumeControls() {
@@ -2112,12 +2248,13 @@
         }
 
         async function playTrack(index) {
-            if (index < 0 || index >= currentPlaylist.length || isPlaybackPending) return;
+            if (index < 0 || index >= currentPlaylist.length) return;
             currentTrackIndex = index;
             const track = currentPlaylist[currentTrackIndex];
             isPlaybackPending = true;
             try {
                 audio.src = track.url;
+                audio.playbackRate = currentPlaybackRate;
                 currentTitle.innerText = track.title;
                 currentArtist.innerText = track.artist;
                 currentCover.src = track.cover;
