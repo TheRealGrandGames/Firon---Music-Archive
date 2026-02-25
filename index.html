@@ -24,7 +24,7 @@
         }
         
         @media (max-width: 768px) {
-            aside { display: none !important; }
+            /* Remove the 'aside' display rule entirely */
             main { padding-top: 20px; }
             .glass-player { height: auto; padding: 15px 10px; }
             .player-layout { flex-direction: column; gap: 15px; }
@@ -386,7 +386,7 @@
             </div>
 
             <div class="sidebar-version">
-                v1.6
+                v1.6.1
             </div>
         </aside>
         <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/60 z-[65] hidden"></div>
@@ -1913,6 +1913,7 @@
                     { title: "Try Everything", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
                     { title: "Try Everything (Instrumental)", url: "https://archive.org/download/try-everything-instrumental/Try_Everything%20INSTRUMENTAL.mp3", duration: "3:17" },
                     { title: "Zoo", url: "https://archive.org/download/try-everything_202601/Zoo.mp3", duration: "3:11" },
+                    { title: "Zoo (Instrumental)", url: "https://archive.org/download/zoo-instrumental/Zoo%20%28Instrumental%29.mp3", duration: "3:11"},
                     { title: "Zoo (End Credits Version)", url: "https://archive.org/download/zoo-instrumental-end-credits-version/Zoo%20%28End%20Credits%20Version%29.mp3", duration: "3:25" },
                     { title: "Zoo (End Credits Version + Instrumental)", url: "https://archive.org/download/zoo-instrumental-end-credits-version/Zoo%20Instrumental%20%28End%20Credits%20Version%29.mp3", duration: "3:27" },
                 ]
@@ -1983,17 +1984,46 @@
         document.addEventListener('click', () => moreMenu.classList.add('hidden'));
         moreMenu.onclick = (e) => e.stopPropagation();
 
-        // Sync Mobile Speed with Main Speed
+        // Sync Mobile Speed with Main Speed and Audio
         mobileSpeed.onchange = (e) => {
-            const val = e.target.value;
-            speedControl.value = val; // Sync main dropdown
-            speedControl.dispatchEvent(new Event('change')); // Trigger original logic
+            const val = parseFloat(e.target.value);
+            currentPlaybackRate = val;
+            speedControl.value = e.target.value; // Sync main dropdown UI
+            audio.playbackRate = val; // Actually change the speed
         };
 
-        // Sync Mobile Volume with Main Volume
+        // Also update the mobile dropdown when the main one changes
+        speedControl.onchange = (e) => {
+            const val = parseFloat(e.target.value);
+            currentPlaybackRate = val;
+            mobileSpeed.value = e.target.value; // Sync mobile UI
+            audio.playbackRate = val;
+        };
+
+        // Sync Mobile Volume with Main Volume and Audio
         mobileVolume.oninput = (e) => {
-            volumeSlider.value = e.target.value;
-            volumeSlider.dispatchEvent(new Event('input'));
+            const val = parseFloat(e.target.value);
+            audio.volume = val;
+            volumeSlider.value = val; // Sync main slider UI
+
+            // Update mute state logic
+            if (val > 0) { 
+                isMuted = false; 
+                lastVolume = val; 
+            } else { 
+                isMuted = true; 
+            }
+            updateVolumeUI();
+        };
+
+        // Also update the mobile slider when the main one is moved
+        volumeSlider.oninput = (e) => {
+            const val = parseFloat(e.target.value);
+            audio.volume = val;
+            mobileVolume.value = val; // Sync mobile UI
+
+            if (val > 0) { isMuted = false; lastVolume = val; } else { isMuted = true; }
+            updateVolumeUI();
         };
 
         const observer = new IntersectionObserver(
@@ -2020,6 +2050,8 @@
                 const scroll = mainContent.scrollTop;
                 albumHeaderBg.style.transform = `translateY(${scroll * 0.4}px)`;
             };
+            mobileVolume.value = audio.volume;
+            mobileSpeed.value = currentPlaybackRate;
         }
 
         function toggleSidebar(forceClose) {
