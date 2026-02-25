@@ -386,7 +386,7 @@
             </div>
 
             <div class="sidebar-version">
-                v1.6.1
+                v1.6.2
             </div>
         </aside>
         <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/60 z-[65] hidden"></div>
@@ -2457,6 +2457,7 @@
                 updateUIHighlights();
                 await audio.play();
                 isPlaying = true;
+                document.title = `${currentPlaylist[currentTrackIndex].title} - Firon`;
             } catch (err) { isPlaying = false; } finally { isPlaybackPending = false; updatePlayButton(); }
         }
 
