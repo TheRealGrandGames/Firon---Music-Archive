@@ -10,7 +10,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
         
-        #albums-grid {
+        #albums-grid, .albums-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 1.5rem;
@@ -386,7 +386,7 @@
             </div>
 
             <div class="sidebar-version">
-                v1.6.3
+                v1.7
             </div>
         </aside>
         <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/60 z-[65] hidden"></div>
@@ -400,11 +400,16 @@
             <div id="album-header-bg"></div>
 
             <div id="home-view" class="p-4 md:p-8 relative z-10">
+                <!-- Surprise Me Button -->
                 <div class="flex items-center justify-between mb-6">
                     <button onclick="playSurprise()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition flex items-center shadow-lg">
                         <i class="fas fa-dice mr-2"></i> Surprise Me
                     </button>
                 </div>
+
+                <!-- Segments Container -->
+                <div id="home-segments"></div>
+
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Recent Collections</h2>
@@ -2017,6 +2022,15 @@
             },
         ];
 
+        const homeSegments = [
+            {
+                id: "zootopia-10",
+                title: "Celebrate 10 Years!",
+                description: "A tribute to the world of Zootopia. Explore the original soundscapes and the high-energy sequels.",
+                albumIds: ["album-zootopia", "album-zootopia-2", "album-zootopia-plus", "album-gazelle-zootopia"]
+            }
+        ];
+
         let currentPlaylist = [];
         let currentTrackIndex = 0;
         let isPlaying = false;
@@ -2055,6 +2069,7 @@
         const scopeSelect = document.getElementById('playback-scope');
         const scopeWrapper = document.getElementById('scope-wrapper');
         const mainContent = document.getElementById('main-content');
+        const homeSegmentsContainer = document.getElementById('home-segments');
         const homeView = document.getElementById('home-view');
         const searchView = document.getElementById('search-view');
         const albumView = document.getElementById('album-view');
@@ -2381,8 +2396,31 @@
         }
 
         function renderHomeAlbums(data) {
+            // Render Curated Segments
+            homeSegmentsContainer.innerHTML = '';
+            homeSegments.forEach(segment => {
+                const section = document.createElement('div');
+                section.className = "mb-10";
+                section.innerHTML = `
+                    <div class="mb-4">
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">${segment.title}</h2>
+                        <p class="text-gray-400 text-xs md:text-sm font-medium mt-1">${segment.description}</p>
+                    </div>
+                    <div class="albums-grid" id="grid-${segment.id}"></div>
+                `;
+                homeSegmentsContainer.appendChild(section);
+                const grid = document.getElementById(`grid-${segment.id}`);
+                segment.albumIds.forEach(id => {
+                    const album = library.find(a => a.id === id);
+                    if (album && !album.hidden) grid.appendChild(createAlbumCard(album));
+                });
+            });
+
+            // Render Recent Collections
             albumsGrid.innerHTML = '';
-            data.filter(album => !album.hidden).forEach(album => albumsGrid.appendChild(createAlbumCard(album)));
+            library.filter(album => !album.hidden).forEach(album => {
+                albumsGrid.appendChild(createAlbumCard(album));
+            });
         }
 
         function renderSearchContent(albums, songs) {
