@@ -2265,7 +2265,7 @@
                 return;
             }
 
-            const lyricsPath = `Lyrics/album-${track.albumId}.${currentTrackIndex + 1}.vtt`;
+            const lyricsPath = `Lyrics/${track.albumId}.${currentTrackIndex + 1}.vtt`;
             console.log("Lyrics: Attempting to fetch from ->", lyricsPath);
 
             try {
@@ -2295,7 +2295,7 @@
         const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})\s+-->\s+(\d{2}:\d{2}:\d{2}\.\d{3})[\r\n]+([\s\S]*?)(?=[\r\n]{2,}|$)/g;
         const items = [];
         let match;
-    
+
         while ((match = regex.exec(data)) !== null) {
             items.push({
                 start: timeToSeconds(match[1]),
