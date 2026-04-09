@@ -2284,6 +2284,12 @@
         };
 
         async function loadLyrics() {
+            // --- 1. RESET STATE IMMEDIATELY ---
+            lyrics = [];             // Clear the old lyrics array
+            lastLyricIndex = -1;     // Reset the tracker
+            lyricsContent.innerHTML = '<div class="text-white/20 animate-pulse">Loading lyrics...</div>'; 
+            // ----------------------------------
+
             lyricsContent.innerText = "Loading lyrics...";
             const track = currentPlaylist[currentTrackIndex];
             if (!track) return;
