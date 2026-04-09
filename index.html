@@ -2310,17 +2310,30 @@
     }
 
     audio.addEventListener('timeupdate', () => {
-        if (!lyricsEnabled || lyrics.length === 0) return;
-
+        // 1. Safety check: is the overlay visible and do we have lyrics?
+        if (lyricsOverlay.classList.contains('hidden')) return;
+    
+        if (!lyrics || lyrics.length === 0) {
+            // If we have no lyrics, the loadLyrics function should have handled the text,
+            // but we'll put a fallback here just in case.
+            return;
+        }
+        
         const time = audio.currentTime;
+        
+        // 2. Find the line that matches the current time
         const currentLine = lyrics.find(line => time >= line.start && time <= line.end);
-
+        
         if (currentLine) {
-            if (lyricsContent.innerText !== currentLine.text) {
-                lyricsContent.innerText = currentLine.text;
+            // 3. Only update if the text is actually different (saves performance)
+            if (lyricsContent.innerHTML !== currentLine.text) {
+                lyricsContent.innerHTML = currentLine.text;
+                // Optional: add a small fade-in effect
+                lyricsContent.style.opacity = "1";
             }
         } else {
-            lyricsContent.innerText = "";
+            // 4. Show a placeholder so the user knows it's working during instrumental parts
+            lyricsContent.innerHTML = '<span class="opacity-20 transition-opacity">...</span>';
         }
     });
 
