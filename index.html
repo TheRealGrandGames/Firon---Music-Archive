@@ -349,6 +349,29 @@
             background: #ff0000;
             border-radius: 2px;
         }
+
+        .marquee-content {
+          display: inline-block;
+          white-space: nowrap;
+          transition: transform 0.5s ease;
+        }
+        .is-overflowing {
+          animation: marquee 5s ease-in-out infinite alternate;
+        }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(var(--move-distance, -50%)); }
+        }
+
+        .album-card.is-broken {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+            pointer-events: none; /* Prevents clicking */
+        }
+        .album-card.is-broken .play-overlay {
+            display: none;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -386,7 +409,7 @@
             </div>
 
             <div class="sidebar-version">
-                v1.7.1
+                v1.8
             </div>
         </aside>
         <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/60 z-[65] hidden"></div>
@@ -459,8 +482,9 @@
                     </div>
                     <div class="text-center md:text-left flex-1 overflow-hidden">
                         <p class="text-xs md:text-sm font-bold text-red-600 uppercase tracking-widest mb-2" id="view-album-tags">Collection</p>
-                        <h1 id="view-album-title" class="text-3xl md:text-6xl font-black mb-4 tracking-tighter leading-tight truncate">Album Title</h1>
-                        <!-- Fixed: Removed line-clamp-3 so descriptions are full -->
+                        <div class="marquee-container" id="title-container">
+                            <h1 id="view-album-title" class="marquee-content text-3xl md:text-6xl font-black mb-4 tracking-tighter leading-tight">Album Title</h1>
+                        </div>                        <!-- Fixed: Removed line-clamp-3 so descriptions are full -->
                         <p id="view-album-description" class="text-gray-300 text-sm md:text-base mb-6 max-w-2xl">Album description goes here.</p>
                         <p id="view-album-info" class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-6">Artist • Year</p>
                         <div class="flex flex-wrap justify-center md:justify-start gap-3 items-center px-2">
@@ -487,6 +511,15 @@
                         <span class="text-right"><i class="far fa-clock"></i></span>
                     </div>
                     <div id="tracklist" class="space-y-1"></div>
+                </div>
+            </div>
+
+            <div id="lyrics-overlay" class="hidden fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-10 text-center transition-all duration-500">
+                <button onclick="document.getElementById('lyrics-overlay').classList.add('hidden')" class="absolute top-10 right-10 text-white/50 hover:text-white text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="lyrics-content" class="text-2xl md:text-4xl font-bold leading-relaxed max-w-4xl">
+                    <!-- Lyrics will appear here -->
                 </div>
             </div>
         </main>
@@ -528,6 +561,9 @@
                     </button>
                     <button id="btn-next" class="text-white hover:scale-110 transition"><i class="fas fa-step-forward text-lg md:text-xl"></i></button>
                     <button id="btn-repeat" class="text-gray-500 hover:text-white transition text-[10px] md:text-xs" title="Repeat"><i class="fas fa-repeat"></i></button>
+                    <button id="btn-lyrics" class="text-gray-500 hover:text-white transition text-[10px] md:text-xs" title="Lyrics">
+                        <i class="fas fa-closed-captioning"></i>
+                    </button>
                 </div>
                 <div class="flex items-center space-x-2 text-[10px] font-medium text-gray-500 mt-2 font-mono">
                     <span id="time-current">0:00</span>
@@ -1535,6 +1571,66 @@
                 ]
             },
             {
+                id: "album-super-mario-world-2-yoshis-island",
+                title: "Super Mario World 2: Yoshi's Island",
+                artist: "Nintendo",
+                year: "1995",
+                description: "A vibrant, genre-defying score that mirrors its storybook aesthetic, blending playful lullabies with high-octane rock to create one of the most experimental and beloved soundtracks of the 16-bit generation.",
+                tags: ["Video Game"],
+                hidden: false,
+                realCover: "https://upload.wikimedia.org/wikipedia/en/9/9a/Yoshi%27s_Island_%28Super_Mario_World_2%29_box_art.jpg",
+                bgImage: "https://www.nintendojo.com/wp-content/uploads/2010/12/scrn_yoshisIsland.jpg", 
+                dividers: {
+                },
+                topTracks: [0, 1, 2, 5, 7, 10, 11, 12, 13, 15, 16, 20, 25, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41],
+                tracks: [
+                    { title: "Nintendo Presents...", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/kcerwgqk/01.%20Nintendo%20Presents....mp3", duration: "0:02" },
+                    { title: "Opening Melody", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/fteplneh/02.%20Opening%20Melody.mp3", duration: "7:12" },
+                    { title: "Yoshi's Island", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/xtxkgzgi/03%20Yoshi%27s%20Island.mp3", duration: "2:38" },
+                    { title: "Yoshi's Island (World 6)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/uyiwjdsa/04%20Yoshi%27s%20Island%20%28World%206%29.mp3", duration: "1:38" },
+                    { title: "The Journey Begins", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/zysrgeei/05.%20The%20Journey%20Begins.mp3", duration: "0:59" },
+                    { title: "Practice Stage", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/bhjwjcmb/06.%20Practice%20Stage.mp3", duration: "0:31" },
+                    { title: "Stage Start", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/xgozhnrv/07.%20Stage%20Start.mp3", duration: "0:03" },
+                    { title: "Flower Field", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/bvanqrju/08.%20Flower%20Field.mp3", duration: "2:47" },
+                    { title: "Flower Field (Fuzzy 1)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/vwultkus/09.%20Flower%20Field%20%28Fuzzy%201%29.mp3", duration: "1:02" },
+                    { title: "Flower Field (Fuzzy 2)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/evplmbxj/10.%20Flower%20Field%20%28Fuzzy%202%29.mp3", duration: "0:34" },
+                    { title: "Goal!", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/cijuygnw/11.%20Goal%21.mp3", duration: "0:06" },
+                    { title: "Results", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/ujkxhsur/12.%20Results.mp3", duration: "0:55" },
+                    { title: "Underground", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/cnfpgmte/13%20Underground.mp3", duration: "1:40" },
+                    { title: "Castle & Fortress", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/saxobqyt/14%20Castle%20%26%20Fortress.mp3", duration: "2:01" },
+                    { title: "Kamek's Theme", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/auzmofmu/15%20Kamek%27s%20Theme.mp3", duration: "0:30" },
+                    { title: "Stage Boss", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/maqdsesz/16.%20Stage%20Boss.mp3", duration: "2:06" },
+                    { title: "Athletic", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/xmscijwg/17%20Athletic.mp3", duration: "2:06" },
+                    { title: "Athletic (Fuzzy 1)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/pefklbwf/18%20Athletic%20%28Fuzzy%201%29.mp3", duration: "0:17" },
+                    { title: "Athletic (Fuzzy 2)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/klasnlpt/19%20Athletic%20%28Fuzzy%202%29.mp3", duration: "0:44" },
+                    { title: "Athletic (Fuzzy 3)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/zovmzkbd/20%20Athletic%20%28Fuzzy%203%29.mp3", duration: "1:55" },
+                    { title: "Ground", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/nfkkusgc/21.%20Ground.mp3", duration: "1:12" },
+                    { title: "Ground (Fuzzy)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/reujpvhz/22.%20Ground%20%28Fuzzy%29.mp3", duration: "1:56" },
+                    { title: "Yoshi Down!", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/aevrwjdo/23.%20Yoshi%20Down%21.mp3", duration: "0:05" },
+                    { title: "Game Over", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/lnfodbva/24%20Game%20Over.mp3", duration: "0:10" },
+                    { title: "In the Boss Room", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/ougyywpg/25.%20In%20the%20Boss%20Room.mp3", duration: "0:55" },
+                    { title: "Big Boss", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/nvpmrxny/26%20Big%20Boss.mp3", duration: "1:57" },
+                    { title: "Big Boss (No Intro)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/ajrjtpvi/27%20Big%20Boss%20%28No%20Intro%29.mp3", duration: "1:42" },
+                    { title: "Big Boss Clear", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/fyecwbtp/28%20Big%20Boss%20Clear.mp3", duration: "0:08" },
+                    { title: "Map Screen (Part 1)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/qnofmrzv/29.%20Map%20Screen%20%28Part%201%29.mp3", duration: "0:26" },
+                    { title: "Map Screen (Part 2)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/elshedbv/30.%20Map%20Screen%20%28Part%202%29.mp3", duration: "0:26" },
+                    { title: "Map Screen (Part 3)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/cymmbxfi/31.%20Map%20Screen%20%28Part%203%29.mp3", duration: "0:26" },
+                    { title: "Map Screen (Part 4)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/bjqcolpr/32.%20Map%20Screen%20%28Part%204%29.mp3", duration: "0:26" },
+                    { title: "Map Screen (Part 5)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/nrsnnyhm/33.%20Map%20Screen%20%28Part%205%29.mp3", duration: "0:26" },
+                    { title: "Map Screen (Part 6)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/qqjynuih/34.%20Map%20Screen%20%28Part%206%29.mp3", duration: "0:26" },
+                    { title: "Map Screen (Part 7)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/nuifapxt/35.%20Map%20Screen%20%28Part%207%29.mp3", duration: "0:26" },
+                    { title: "Bonus Challenge", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/zrkayros/36.%20Bonus%20Challenge.mp3", duration: "1:17" },
+                    { title: "Powerful Mario", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/zrkawfmw/37.%20Powerful%20Mario.mp3", duration: "0:51" },
+                    { title: "Bowser", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/wqpdxdzm/38%20Bowser.mp3", duration: "2:43" },
+                    { title: "Bowser Defeated", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/krbilgza/39.%20Bowser%20Defeated.mp3", duration: "0:10" },
+                    { title: "Rescuing Luigi", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/gebvwybm/40.%20Rescuing%20Luigi.mp3", duration: "1:10" },
+                    { title: "Ending (Part 1)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/eknidprp/41.%20Ending%20%28Part%201%29.mp3", duration: "3:07" },
+                    { title: "Ending (Part 2)", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/zblxhuzo/42.%20Ending%20%28Part%202%29.mp3", duration: "0:48" },
+                    { title: "World Complete", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/wrspvjhl/43%20World%20Complete.mp3", duration: "0:05" },
+                    { title: "Bonus Fanfare", url: "https://jetta.vgmtreasurechest.com/soundtracks/super-mario-world-2-yoshi-s-island-super-nintendo-gamerip/hdwvojbi/44%20Bonus%20Fanfare.mp3", duration: "0:03" },
+                ]
+            },
+            {
                 id: "album-nsmb-wii",
                 title: "New Super Mario Bros. Wii",
                 artist: "Nintendo",
@@ -2107,6 +2203,8 @@
         let isMuted = false;
         let isPlaybackPending = false;
         let currentPlaybackRate = 1;
+        let lyrics = []; // Array of { start: seconds, end: seconds, text: string }
+        let lyricsEnabled = false;
 
         const audio = document.getElementById('main-audio');
         const playPauseBtn = document.getElementById('btn-play-pause');
@@ -2145,6 +2243,70 @@
         const moreMenu = document.getElementById('more-menu');
         const mobileSpeed = document.getElementById('speed-control-mobile');
         const mobileVolume = document.getElementById('volume-slider-mobile');
+        const btnLyrics = document.getElementById('btn-lyrics');
+        const lyricsOverlay = document.getElementById('lyrics-overlay');
+        const lyricsContent = document.getElementById('lyrics-content');
+
+        btnLyrics.onclick = () => {
+            if (!audio.src || currentPlaylist.length === 0) {
+                lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(No song has been selected)</span>';
+                lyricsOverlay.classList.remove('hidden');
+                return;
+            }
+            lyricsOverlay.classList.remove('hidden');
+            loadLyrics();
+        };
+
+        async function loadLyrics() {
+        const track = currentPlaylist[currentTrackIndex];
+        const album = library.find(a => a.id === track.albumId);
+        // Path format: Lyrics/album-id.trackIndex.vtt
+        const lyricsPath = `Lyrics/${track.albumId}.${currentTrackIndex + 1}.vtt`;
+
+        try {
+            const response = await fetch(lyricsPath);
+            if (!response.ok) throw new Error('Not found');
+            const text = await response.text();
+            lyrics = parseVTT(text);
+        } catch (err) {
+            lyrics = [];
+            lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(No lyrics available for this song)</span>';
+        }
+    }
+    
+    function parseVTT(data) {
+        const regex = /(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})\n([\s\S]*?)(?=\n\n|\n$|$)/g;
+        const items = [];
+        let match;
+        while ((match = regex.exec(data)) !== null) {
+            items.push({
+                start: timeToSeconds(match[1]),
+                end: timeToSeconds(match[2]),
+                text: match[3].trim()
+            });
+        }
+        return items;
+    }
+
+    function timeToSeconds(timeStr) {
+        const p = timeStr.split(':');
+        return parseFloat(p[0]) * 3600 + parseFloat(p[1]) * 60 + parseFloat(p[2]);
+    }
+
+    audio.addEventListener('timeupdate', () => {
+        if (!lyricsEnabled || lyrics.length === 0) return;
+
+        const time = audio.currentTime;
+        const currentLine = lyrics.find(line => time >= line.start && time <= line.end);
+
+        if (currentLine) {
+            if (lyricsContent.innerText !== currentLine.text) {
+                lyricsContent.innerText = currentLine.text;
+            }
+        } else {
+            lyricsContent.innerText = "";
+        }
+    });
 
         // Toggle Menu
         btnMore.onclick = (e) => {
@@ -2567,6 +2729,27 @@
             renderTracklist(album);
             document.getElementById('btn-play-album').onclick = () => { activeAlbumId = album.id; currentPlaylist = albumToPlaylist(album); isShuffle = false; shuffleBtn.classList.remove('control-active'); playTrack(0); };
             document.getElementById('btn-shuffle-album').onclick = () => { activeAlbumId = album.id; currentPlaylist = albumToPlaylist(album); isShuffle = true; shuffleBtn.classList.add('control-active'); playTrack(Math.floor(Math.random()*currentPlaylist.length)); };
+        
+            // 1. Set the text first
+            const titleElement = document.getElementById('view-album-title');
+            titleElement.innerText = album.title;
+
+            // 2. Clear previous animation state
+            titleElement.classList.remove('is-overflowing');
+            titleElement.style.transform = 'translateX(0)';
+
+            // 3. Check for overflow
+            // We use a timeout to ensure the browser has rendered the new text width
+            setTimeout(() => {
+                const container = document.getElementById('title-container');
+                if (titleElement.scrollWidth > container.offsetWidth) {
+                    titleElement.classList.add('is-overflowing');
+
+                    // Dynamic calc: Move exactly the distance of the overflow
+                    const distance = titleElement.scrollWidth - container.offsetWidth;
+                    titleElement.style.setProperty('--move-distance', `-${distance}px`);
+                }
+            }, 50);
         }
 
         // Tab Switching Logic
@@ -2653,6 +2836,7 @@
                 await audio.play();
                 isPlaying = true;
                 document.title = `${currentPlaylist[currentTrackIndex].title} - Firon`;
+                if (lyricsEnabled) loadLyrics();
             } catch (err) { isPlaying = false; } finally { isPlaybackPending = false; updatePlayButton(); }
         }
 
