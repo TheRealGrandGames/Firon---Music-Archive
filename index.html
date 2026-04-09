@@ -2260,40 +2260,47 @@
         async function loadLyrics() {
             lyricsContent.innerText = "Loading lyrics...";
             const track = currentPlaylist[currentTrackIndex];
-            if (!track) return;
-        
-            // Use a relative path (no leading slash) to stay inside your repo folder
-            const lyricsPath = `Lyrics/${track.albumId}.${currentTrackIndex + 1}.vtt`;
-        
+            if (!track) {
+                console.log("Lyrics Error: No track found at index", currentTrackIndex);
+                return;
+            }
+
+            const lyricsPath = `Lyrics/album-${track.albumId}.${currentTrackIndex + 1}.vtt`;
+            console.log("Lyrics: Attempting to fetch from ->", lyricsPath);
+
             try {
                 const response = await fetch(lyricsPath);
-                
-                if (!response.ok) {
-                    // This will help you see EXACTLY what path GitHub is failing to find
-                    console.error(`Lyrics not found at: ${lyricsPath}`);
-                    throw new Error('Not found');
-                }
-                
+                console.log("Lyrics: Server responded with status:", response.status);
+
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
                 const text = await response.text();
+                console.log("Lyrics: File text received (first 50 chars):", text.substring(0, 50));
+
                 lyrics = parseVTT(text);
-                
-                if (lyrics.length === 0) throw new Error('Empty');
-                
+                console.log("Lyrics: Successfully parsed lines:", lyrics.length);
+
+                if (lyrics.length === 0) {
+                    lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(Lyrics file is empty or formatted incorrectly)</span>';
+                }
             } catch (err) {
+                console.error("Lyrics: Fetch/Parse failed:", err);
                 lyrics = [];
                 lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(No lyrics available for this song)</span>';
             }
         }
     
     function parseVTT(data) {
-        const regex = /(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})\n([\s\S]*?)(?=\n\n|\n$|$)/g;
+        // This version handles \r\n (Windows) and \n (Linux/GitHub)
+        const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})\s+-->\s+(\d{2}:\d{2}:\d{2}\.\d{3})[\r\n]+([\s\S]*?)(?=[\r\n]{2,}|$)/g;
         const items = [];
         let match;
+    
         while ((match = regex.exec(data)) !== null) {
             items.push({
                 start: timeToSeconds(match[1]),
                 end: timeToSeconds(match[2]),
-                text: match[3].trim()
+                text: match[3].trim().replace(/[\r\n]+/g, '<br>')
             });
         }
         return items;
