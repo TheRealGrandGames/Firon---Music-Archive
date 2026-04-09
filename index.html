@@ -372,6 +372,32 @@
         .album-card.is-broken .play-overlay {
             display: none;
         }
+
+        #lyrics-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            gap: 1.5rem;
+        }
+
+        .lyric-line {
+            transition: all 0.5s ease;
+            filter: blur(0);
+        }
+
+        .lyric-past, .lyric-upcoming {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.7em;
+            transform: scale(0.9);
+        }
+
+        .lyric-current {
+            color: white;
+            font-size: 1.1em;
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -593,15 +619,6 @@
             </div>
         </div>
 
-        <div id="lyrics-overlay" class="hidden fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-10 text-center transition-all duration-500">
-            <button onclick="document.getElementById('lyrics-overlay').classList.add('hidden')" class="absolute top-10 right-10 text-white/50 hover:text-white text-2xl">
-                <i class="fas fa-times"></i>
-            </button>
-            <div id="lyrics-content" class="text-2xl md:text-4xl font-bold leading-relaxed max-w-4xl">
-                <!-- Lyrics will appear here -->
-            </div>
-        </div>
-
         <div id="more-menu" class="hidden absolute bottom-24 right-4 bg-[#1a1a1a] border border-white/10 rounded-xl p-6 shadow-2xl z-[60] w-64 animate-in slide-in-from-bottom-2">
             <h5 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Playback Settings</h5>
 
@@ -630,6 +647,15 @@
             </div>
         </div>
     </footer>
+
+    <div id="lyrics-overlay" class="hidden fixed inset-0 z-[30] bg-black/90 flex flex-col items-center justify-center p-10 text-center transition-all duration-500">
+        <button onclick="document.getElementById('lyrics-overlay').classList.add('hidden')" class="absolute top-10 right-10 text-white/50 hover:text-white text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="lyrics-content" class="text-2xl md:text-4xl font-bold leading-relaxed max-w-4xl">
+            <!-- Lyrics will appear here -->
+        </div>
+    </div>
 
     <audio id="main-audio"></audio>
 
@@ -2309,33 +2335,46 @@
         return parseFloat(p[0]) * 3600 + parseFloat(p[1]) * 60 + parseFloat(p[2]);
     }
 
+    let lastLyricIndex = -1;
+
     audio.addEventListener('timeupdate', () => {
-        // 1. Safety check: is the overlay visible and do we have lyrics?
-        if (lyricsOverlay.classList.contains('hidden')) return;
+        if (lyricsOverlay.classList.contains('hidden') || !lyrics.length) return;
     
-        if (!lyrics || lyrics.length === 0) {
-            // If we have no lyrics, the loadLyrics function should have handled the text,
-            // but we'll put a fallback here just in case.
-            return;
-        }
-        
         const time = audio.currentTime;
-        
-        // 2. Find the line that matches the current time
-        const currentLine = lyrics.find(line => time >= line.start && time <= line.end);
-        
-        if (currentLine) {
-            // 3. Only update if the text is actually different (saves performance)
-            if (lyricsContent.innerHTML !== currentLine.text) {
-                lyricsContent.innerHTML = currentLine.text;
-                // Optional: add a small fade-in effect
-                lyricsContent.style.opacity = "1";
-            }
-        } else {
-            // 4. Show a placeholder so the user knows it's working during instrumental parts
-            lyricsContent.innerHTML = '<span class="opacity-20 transition-opacity">...</span>';
+        // Find the index of the line that should be active
+        const currentIndex = lyrics.findIndex(line => time >= line.start && time <= line.end);
+    
+        // Only re-render if the song has moved to a new line
+        if (currentIndex !== lastLyricIndex && currentIndex !== -1) {
+            lastLyricIndex = currentIndex;
+            renderScrollingLyrics(currentIndex);
         }
     });
+    
+    function renderScrollingLyrics(activeIndex) {
+        // We want to show a few lines before and a few lines after
+        const contextRange = 3; 
+        let html = '';
+    
+        lyrics.forEach((line, index) => {
+            // Only render lines within the range to keep DOM light
+            if (index >= activeIndex - contextRange && index <= activeIndex + contextRange) {
+                let statusClass = 'lyric-upcoming';
+                if (index < activeIndex) statusClass = 'lyric-past';
+                if (index === activeIndex) statusClass = 'lyric-current';
+    
+                html += `<div class="lyric-line ${statusClass}">${line.text}</div>`;
+            }
+        });
+    
+        lyricsContent.innerHTML = html;
+    
+        // Optional: Add a slight entrance animation to the whole container
+        lyricsContent.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            lyricsContent.style.transform = 'translateY(0px)';
+        }, 50);
+    }
 
         // Toggle Menu
         btnMore.onclick = (e) => {
