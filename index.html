@@ -2260,47 +2260,45 @@
         async function loadLyrics() {
             lyricsContent.innerText = "Loading lyrics...";
             const track = currentPlaylist[currentTrackIndex];
-            if (!track) {
-                console.log("Lyrics Error: No track found at index", currentTrackIndex);
-                return;
-            }
-
-            const lyricsPath = 'Lyrics/' + track.albumId + '.' + (currentTrackIndex + 1) + '.vtt';
-            console.log("Lyrics: Attempting to fetch from ->", lyricsPath);
-
+            if (!track) return;
+        
+            const lyricsPath = `Lyrics/album-${track.albumId}.${currentTrackIndex + 1}.vtt`;
+        
             try {
                 const response = await fetch(lyricsPath);
-                console.log("Lyrics: Server responded with status:", response.status);
-
-                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
+                if (!response.ok) throw new Error('File not found');
+                
                 const text = await response.text();
-                console.log("Lyrics: File text received (first 50 chars):", text.substring(0, 50));
-
                 lyrics = parseVTT(text);
-                console.log("Lyrics: Successfully parsed lines:", lyrics.length);
-
+                
+                // If the array is empty, the regex failed to find any timestamps
                 if (lyrics.length === 0) {
-                    lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(Lyrics file is empty or formatted incorrectly)</span>';
+                    console.warn("Parser found 0 lines. Check your .vtt formatting.");
+                    lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(Lyrics format not recognized)</span>';
+                } else {
+                    // Success! The timeupdate listener will now take over.
+                    lyricsContent.innerText = ""; 
                 }
             } catch (err) {
-                console.error("Lyrics: Fetch/Parse failed:", err);
                 lyrics = [];
                 lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(No lyrics available for this song)</span>';
             }
         }
     
     function parseVTT(data) {
-        // This version handles \r\n (Windows) and \n (Linux/GitHub)
-        const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})\s+-->\s+(\d{2}:\d{2}:\d{2}\.\d{3})[\r\n]+([\s\S]*?)(?=[\r\n]{2,}|$)/g;
+        // Remove the "WEBVTT" header if it exists
+        const cleanData = data.replace(/^WEBVTT[\s\S]*?\n\n/, '');
+
+        // This regex is more flexible with spaces and line breaks
+        const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})\s+-->\s+(\d{2}:\d{2}:\d{2}\.\d{3})\r?\n([\s\S]*?)(?=\r?\n\r?\n|$)/g;
         const items = [];
         let match;
 
-        while ((match = regex.exec(data)) !== null) {
+        while ((match = regex.exec(cleanData)) !== null) {
             items.push({
                 start: timeToSeconds(match[1]),
                 end: timeToSeconds(match[2]),
-                text: match[3].trim().replace(/[\r\n]+/g, '<br>')
+                text: match[3].trim().replace(/\r?\n/g, '<br>')
             });
         }
         return items;
