@@ -2258,21 +2258,32 @@
         };
 
         async function loadLyrics() {
-        const track = currentPlaylist[currentTrackIndex];
-        const album = library.find(a => a.id === track.albumId);
-        // Path format: Lyrics/album-id.trackIndex.vtt
-        const lyricsPath = `Lyrics/${track.albumId}.${currentTrackIndex + 1}.vtt`;
-
-        try {
-            const response = await fetch(lyricsPath);
-            if (!response.ok) throw new Error('Not found');
-            const text = await response.text();
-            lyrics = parseVTT(text);
-        } catch (err) {
-            lyrics = [];
-            lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(No lyrics available for this song)</span>';
+            lyricsContent.innerText = "Loading lyrics...";
+            const track = currentPlaylist[currentTrackIndex];
+            if (!track) return;
+        
+            // Use a relative path (no leading slash) to stay inside your repo folder
+            const lyricsPath = `Lyrics/${track.albumId}.${currentTrackIndex + 1}.vtt`;
+        
+            try {
+                const response = await fetch(lyricsPath);
+                
+                if (!response.ok) {
+                    // This will help you see EXACTLY what path GitHub is failing to find
+                    console.error(`Lyrics not found at: ${lyricsPath}`);
+                    throw new Error('Not found');
+                }
+                
+                const text = await response.text();
+                lyrics = parseVTT(text);
+                
+                if (lyrics.length === 0) throw new Error('Empty');
+                
+            } catch (err) {
+                lyrics = [];
+                lyricsContent.innerHTML = '<span class="opacity-50 text-xl">(No lyrics available for this song)</span>';
+            }
         }
-    }
     
     function parseVTT(data) {
         const regex = /(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})\n([\s\S]*?)(?=\n\n|\n$|$)/g;
