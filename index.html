@@ -2261,16 +2261,16 @@
             lyricsContent.innerText = "Loading lyrics...";
             const track = currentPlaylist[currentTrackIndex];
             if (!track) return;
-        
-            const lyricsPath = `Lyrics/album-${track.albumId}.${currentTrackIndex + 1}.vtt`;
-        
+
+            const lyricsPath = `Lyrics/${track.albumId}.${currentTrackIndex + 1}.vtt`;
+
             try {
                 const response = await fetch(lyricsPath);
                 if (!response.ok) throw new Error('File not found');
-                
+
                 const text = await response.text();
                 lyrics = parseVTT(text);
-                
+
                 // If the array is empty, the regex failed to find any timestamps
                 if (lyrics.length === 0) {
                     console.warn("Parser found 0 lines. Check your .vtt formatting.");
