@@ -441,7 +441,7 @@
             </div>
 
             <div class="sidebar-version">
-                v1.8
+                v1.9
             </div>
         </aside>
         <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/60 z-[65] hidden"></div>
@@ -462,15 +462,15 @@
                     </button>
                 </div>
 
-                <!-- Segments Container -->
-                <div id="home-segments"></div>
-
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Recent Collections</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">All Albums</h2>
                     </div>
                     <div id="albums-grid"></div>
                 </div>
+
+                <!-- Segments Container -->
+                <div id="home-segments"></div>
             </div>
 
             <div id="search-view" class="p-4 md:p-8 hidden relative z-10">
@@ -582,6 +582,9 @@
 
             <div class="player-controls flex flex-col items-center flex-1 max-w-md">
                 <div class="flex items-center space-x-6 md:space-x-10">
+                    <button id="btn-stop" class="text-gray-500 hover:text-white transition text-xs md:text-sm" title="Stop">
+                        <i class="fas fa-stop"></i>
+                    </button>
                     <button id="btn-shuffle" class="text-gray-500 hover:text-white transition text-[10px] md:text-xs" title="Shuffle"><i class="fas fa-shuffle"></i></button>
                     <button id="btn-prev" class="text-white hover:scale-110 transition"><i class="fas fa-step-backward text-lg md:text-xl"></i></button>
                     <button id="btn-play-pause" class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white text-black rounded-full hover:scale-105 transition shadow-lg">
@@ -594,9 +597,11 @@
                     </button>
                 </div>
                 <div class="flex items-center space-x-2 text-[10px] font-medium text-gray-500 mt-2 font-mono">
-                    <span id="time-current">0:00</span>
-                    <span class="opacity-30">/</span>
-                    <span id="time-total">0:00</span>
+                    <div id="timer-container" class="flex items-center space-x-2 text-[10px] font-medium text-gray-500 mt-2 font-mono cursor-pointer" title="Click to toggle remaining time">
+                        <span id="time-current">0:00</span>
+                        <span class="opacity-30">/</span>
+                        <span id="time-total">0:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -748,7 +753,7 @@
             {
                 id: "album-contentified",
                 title: "Contentified Mod",
-                artist: "GrandGames/C418",
+                artist: "GrandGames",
                 year: "2025-2026",
                 description: "Experience the complete soundtrack from the Minecraft mod: Contentified! Composed by both GrandGames AND C418 to achieve a nostalgic feel whilst still fitting inside of the game.",
                 tags: ["Video Game"],
@@ -759,12 +764,12 @@
                 },
                 topTracks: [0, 1, 4, 5, 6, 8, 9],
                 tracks: [
-                    { title: "Flake", url: "https://archive.org/download/contentified-ost/flake.ogg", duration: "2:49" },
-                    { title: "Kyoto", url: "https://archive.org/download/contentified-ost/kyoto.ogg", duration: "4:08" },
-                    { title: "481772", url: "https://archive.org/download/contentified-ost/481772.ogg", duration: "4:18" },
+                    { title: "Flake", artist: "C418", url: "https://archive.org/download/contentified-ost/flake.ogg", duration: "2:49" },
+                    { title: "Kyoto", artist: "C418", url: "https://archive.org/download/contentified-ost/kyoto.ogg", duration: "4:08" },
+                    { title: "481772", artist: "C418", url: "https://archive.org/download/contentified-ost/481772.ogg", duration: "4:18" },
                     { title: "Blackout (Frozen)", url: "https://archive.org/download/contentified-ost/blackout.ogg", duration: "2:40" },
-                    { title: "Blackout", url: "https://archive.org/download/contentified-ost/blackout_repaired.ogg", duration: "1:00" },
-                    { title: "Certitudes", url: "https://archive.org/download/contentified-ost/certitudes.ogg", duration: "4:34" },
+                    { title: "Blackout", artist: "C418", url: "https://archive.org/download/contentified-ost/blackout_repaired.ogg", duration: "1:00" },
+                    { title: "Certitudes", artist: "C418", url: "https://archive.org/download/contentified-ost/certitudes.ogg", duration: "4:34" },
                     { title: "Harvest", url: "https://archive.org/download/contentified-ost/harvest.ogg", duration: "2:14" },
                     { title: "Haunted", url: "https://archive.org/download/contentified-ost/music_disc_haunted.ogg", duration: "1:00" },
                     { title: "Trade", url: "https://archive.org/download/music_disc_trade/music_disc_trade.ogg", duration: "3:49" },
@@ -859,7 +864,7 @@
             {
                 id: "album-dont-starve-together",
                 title: "Don't Starve Together",
-                artist: "Vince de Vera/Jason Garner",
+                artist: "Vince de Vera",
                 year: "2016",
                 description: "The Don't Starve Together soundtrack is a whimsical yet macabre soundscape that defines the \"survival-gothic\" genre. Composed by Vince de Vera and Jason Garner, it serves as the rhythmic heartbeat of a world that is equal parts charming and lethal.",
                 tags: ["Video Game"],
@@ -872,62 +877,62 @@
                 tracks: [
                     { title: "Title Theme", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/lgyzadsd/01.%20Title%20Theme.mp3", duration: "1:55" },
                     { title: "Autumn Work", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mznpnthc/02.%20Autumn%20Work.mp3", duration: "1:29" },
-                    { title: "Sailing Again", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/qwjjrezh/03.%20Sailing%20Again.mp3", duration: "1:51" },
-                    { title: "Pirate Monkeys", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/oxwogqka/04.%20Pirate%20Monkeys.mp3", duration: "1:52" },
-                    { title: "Return of Them Work", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ypgjckto/05.%20Return%20of%20Them%20Work.mp3", duration: "0:52" },
-                    { title: "Farming", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/peflqxny/06.%20Farming.mp3", duration: "2:28" },
+                    { title: "Sailing Again", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/qwjjrezh/03.%20Sailing%20Again.mp3", duration: "1:51" },
+                    { title: "Pirate Monkeys", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/oxwogqka/04.%20Pirate%20Monkeys.mp3", duration: "1:52" },
+                    { title: "Return of Them Work", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ypgjckto/05.%20Return%20of%20Them%20Work.mp3", duration: "0:52" },
+                    { title: "Farming", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/peflqxny/06.%20Farming.mp3", duration: "2:28" },
                     { title: "Danger (1)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ebrghqho/07.%20Danger%20%281%29.mp3", duration: "1:07" },
                     { title: "Danger (2)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/wsxmrxnv/08.%20Danger%20%282%29.mp3", duration: "1:07" },
                     { title: "Danger (3)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ngocwygh/09.%20Danger%20%283%29.mp3", duration: "1:07" },
-                    { title: "The Floor is Lavae", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/rovknknh/10.%20The%20Floor%20is%20Lavae.mp3", duration: "1:10" },
-                    { title: "Flight of the Grumblebee", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/wnxcrbij/11.%20Flight%20of%20the%20Grumblebee.mp3", duration: "1:04" },
-                    { title: "Warts and All", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/xmpnwujl/12.%20Warts%20and%20All.mp3", duration: "1:06" },
-                    { title: "Krampusnacht Phase 1", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/byqhmrvf/13.%20Krampusnacht%20Phase%201.mp3", duration: "1:02" },
-                    { title: "Krampusnacht Phase 2", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/nxzggpdy/14.%20Krampusnacht%20Phase%202.mp3", duration: "1:02" },
-                    { title: "Moonlit Battle A", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/hoajsorr/15.%20Moonlit%20Battle%20A.mp3", duration: "0:56" },
-                    { title: "Moonlit Battle B", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/iqeaoufr/16.%20Moonlit%20Battle%20B.mp3", duration: "0:56" },
-                    { title: "Against the Grain", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/uwxbnmvs/17.%20Against%20the%20Grain.mp3", duration: "1:34" },
-                    { title: "Ancient Fuelweaver (Phase 1)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/betdjopi/18.%20Ancient%20Fuelweaver%20%28Phase%201%29.mp3", duration: "2:02" },
-                    { title: "Ancient Fuelweaver (Phase 2)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/uarjuwak/19.%20Ancient%20Fuelweaver%20%28Phase%202%29.mp3", duration: "2:02" },
-                    { title: "The Big Bird, Malbatross", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/zsotbayr/20.%20The%20Big%20Bird%2C%20Malbatross.mp3", duration: "1:26" },
+                    { title: "The Floor is Lavae", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/rovknknh/10.%20The%20Floor%20is%20Lavae.mp3", duration: "1:10" },
+                    { title: "Flight of the Grumblebee", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/wnxcrbij/11.%20Flight%20of%20the%20Grumblebee.mp3", duration: "1:04" },
+                    { title: "Warts and All", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/xmpnwujl/12.%20Warts%20and%20All.mp3", duration: "1:06" },
+                    { title: "Krampusnacht Phase 1", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/byqhmrvf/13.%20Krampusnacht%20Phase%201.mp3", duration: "1:02" },
+                    { title: "Krampusnacht Phase 2", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/nxzggpdy/14.%20Krampusnacht%20Phase%202.mp3", duration: "1:02" },
+                    { title: "Moonlit Battle A", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/hoajsorr/15.%20Moonlit%20Battle%20A.mp3", duration: "0:56" },
+                    { title: "Moonlit Battle B", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/iqeaoufr/16.%20Moonlit%20Battle%20B.mp3", duration: "0:56" },
+                    { title: "Against the Grain", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/uwxbnmvs/17.%20Against%20the%20Grain.mp3", duration: "1:34" },
+                    { title: "Ancient Fuelweaver (Phase 1)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/betdjopi/18.%20Ancient%20Fuelweaver%20%28Phase%201%29.mp3", duration: "2:02" },
+                    { title: "Ancient Fuelweaver (Phase 2)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/uarjuwak/19.%20Ancient%20Fuelweaver%20%28Phase%202%29.mp3", duration: "2:02" },
+                    { title: "The Big Bird, Malbatross", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/zsotbayr/20.%20The%20Big%20Bird%2C%20Malbatross.mp3", duration: "1:26" },
                     { title: "Creepy Forest", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ovjjtqyv/21.%20Creepy%20Forest.mp3", duration: "2:44" },
-                    { title: "Hermit Crab", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/gwognxvo/22.%20Hermit%20Crab.mp3", duration: "1:15" },
-                    { title: "Crab King", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/gpfiytyl/23.%20Crab%20King.mp3", duration: "1:32" },
-                    { title: "Celestial Champion (Medley)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/jnmyeddf/24.%20Celestial%20Champion%20%28Medley%29.mp3", duration: "2:35" },
-                    { title: "Wagstaff Experiment", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ruyiuaqd/25.%20Wagstaff%20Experiment.mp3", duration: "0:48" },
-                    { title: "Eye for An Eye - The Eye of Terror (Terraria Crossover Event)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/thirjwht/26.%20Eye%20for%20An%20Eye%20-%20The%20Eye%20of%20Terror%20%28Terraria%20Crossover%20Event%29.mp3", duration: "2:10" },
-                    { title: "Eye for An Eye - Deerclops (Terraria Crossover Event)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ylksgfjb/27.%20Eye%20for%20An%20Eye%20-%20Deerclops%20%28Terraria%20Crossover%20Event%29.mp3", duration: "1:33" },
-                    { title: "Enter the Forge A", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/gbpwlpty/28.%20Enter%20the%20Forge%20A.mp3", duration: "1:34" },
-                    { title: "Enter the Forge B", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mpllwyfh/29.%20Enter%20the%20Forge%20B.mp3", duration: "1:34" },
-                    { title: "For the Forge!", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/srfannbr/30.%20For%20the%20Forge%21.mp3", duration: "1:15" },
-                    { title: "Enter the Gorge", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/dtjqyyuc/31.%20Enter%20the%20Gorge.mp3", duration: "0:57" },
-                    { title: "The Elder Bog A", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/chdupnvq/32.%20The%20Elder%20Bog%20A.mp3", duration: "1:53" },
-                    { title: "The Elder Bog B", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/pbqwlryu/33.%20The%20Elder%20Bog%20B.mp3", duration: "0:50" },
+                    { title: "Hermit Crab", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/gwognxvo/22.%20Hermit%20Crab.mp3", duration: "1:15" },
+                    { title: "Crab King", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/gpfiytyl/23.%20Crab%20King.mp3", duration: "1:32" },
+                    { title: "Celestial Champion (Medley)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/jnmyeddf/24.%20Celestial%20Champion%20%28Medley%29.mp3", duration: "2:35" },
+                    { title: "Wagstaff Experiment", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ruyiuaqd/25.%20Wagstaff%20Experiment.mp3", duration: "0:48" },
+                    { title: "Eye for An Eye - The Eye of Terror (Terraria Crossover Event)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/thirjwht/26.%20Eye%20for%20An%20Eye%20-%20The%20Eye%20of%20Terror%20%28Terraria%20Crossover%20Event%29.mp3", duration: "2:10" },
+                    { title: "Eye for An Eye - Deerclops (Terraria Crossover Event)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ylksgfjb/27.%20Eye%20for%20An%20Eye%20-%20Deerclops%20%28Terraria%20Crossover%20Event%29.mp3", duration: "1:33" },
+                    { title: "Enter the Forge A", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/gbpwlpty/28.%20Enter%20the%20Forge%20A.mp3", duration: "1:34" },
+                    { title: "Enter the Forge B", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mpllwyfh/29.%20Enter%20the%20Forge%20B.mp3", duration: "1:34" },
+                    { title: "For the Forge!", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/srfannbr/30.%20For%20the%20Forge%21.mp3", duration: "1:15" },
+                    { title: "Enter the Gorge", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/dtjqyyuc/31.%20Enter%20the%20Gorge.mp3", duration: "0:57" },
+                    { title: "The Elder Bog A", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/chdupnvq/32.%20The%20Elder%20Bog%20A.mp3", duration: "1:53" },
+                    { title: "The Elder Bog B", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/pbqwlryu/33.%20The%20Elder%20Bog%20B.mp3", duration: "0:50" },
                     { title: "Hoedown (Beaver)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/asmigdbv/34.%20Hoedown%20%28Beaver%29.mp3", duration: "0:57" },
-                    { title: "Hoedown (Goose)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/yfiyudhc/35.%20Hoedown%20%28Goose%29.mp3", duration: "1:39" },
-                    { title: "Hoedown (Moose)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ptwcwdar/36.%20Hoedown%20%28Moose%29.mp3", duration: "1:02" },
+                    { title: "Hoedown (Goose)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/yfiyudhc/35.%20Hoedown%20%28Goose%29.mp3", duration: "1:39" },
+                    { title: "Hoedown (Moose)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/ptwcwdar/36.%20Hoedown%20%28Moose%29.mp3", duration: "1:02" },
                     { title: "WX-78 Ragtime Melody", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/jwdcdgzd/37.%20WX-78%20Ragtime%20Melody.mp3", duration: "0:38" },
                     { title: "WX-78 Ragtime Melody + Rhythm", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/sfxyzbhj/38.%20WX-78%20Ragtime%20Melody%20%2B%20Rhythm.mp3", duration: "0:38" },
-                    { title: "Title Theme (Lunar New Year)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/whwkjrin/39.%20Title%20Theme%20%28Lunar%20New%20Year%29.mp3", duration: "1:56" },
-                    { title: "Title Theme (Winter's Feast)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/qqgjcjnp/40.%20Title%20Theme%20%28Winter%27s%20Feast%29.mp3", duration: "0:56" },
-                    { title: "Title Theme (Wigfrid)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/iwidpozh/41.%20Title%20Theme%20%28Wigfrid%29.mp3", duration: "1:04" },
-                    { title: "Title Theme (Year of the Beefalo)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mngpivdd/42.%20Title%20Theme%20%28Year%20of%20the%20Beefalo%29.mp3", duration: "1:14" },
-                    { title: "Title Theme (Webber)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/jlcenaqe/43.%20Title%20Theme%20%28Webber%29.mp3", duration: "1:14" },
-                    { title: "Title Theme (Waterlogged)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/vsaxnwuh/44.%20Title%20Theme%20%28Waterlogged%29.mp3", duration: "1:06" },
-                    { title: "Title Theme (Wanda)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/eydwwujm/45.%20Title%20Theme%20%28Wanda%29.mp3", duration: "1:12" },
-                    { title: "Title Theme (Wolfgang)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/hyxqnsxl/46.%20Title%20Theme%20%28Wolfgang%29.mp3", duration: "1:36" },
-                    { title: "Nonbinary Code (WX-78 Title Theme)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mdgufrts/47.%20Nonbinary%20Code%20%28WX-78%20Title%20Theme%29.mp3", duration: "1:25" },
-                    { title: "Title Theme (Pirate Monkeys)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/hhpctmel/48.%20Title%20Theme%20%28Pirate%20Monkeys%29.mp3", duration: "0:59" },
-                    { title: "Title Theme (Portalized)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/protbaxl/49.%20Title%20Theme%20%28Portalized%29.mp3", duration: "1:55" },
-                    { title: "Wrestlemania (Unused Intro)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/pqjawjhg/50.%20Wrestlemania%20%28Unused%20Intro%29.mp3", duration: "1:04" },
-                    { title: "Wrestlemania", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/izwjgdzm/51.%20Wrestlemania.mp3", duration: "0:58" },
-                    { title: "Training (Year of the Carrat)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/kopjbdpm/52.%20Training%20%28Year%20of%20the%20Carrat%29.mp3", duration: "1:38" },
-                    { title: "Rat Race (Year of the Carrat)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/rxnvojdq/53.%20Rat%20Race%20%28Year%20of%20the%20Carrat%29.mp3", duration: "1:17" },
-                    { title: "Midsummer Cawnival Track 1", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/srfcwbsi/54.%20Midsummer%20Cawnival%20Track%201.mp3", duration: "1:29" },
-                    { title: "Midsummer Cawnival Track 2", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/liggozip/55.%20Midsummer%20Cawnival%20Track%202.mp3", duration: "1:27" },
-                    { title: "Music Box Hutch", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/agfibevm/56.%20Music%20Box%20Hutch.mp3", duration: "1:12" },
-                    { title: "Jingles Collection (She Sells Seashells)", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/bvwyduqr/57.%20Jingles%20Collection%20%28She%20Sells%20Seashells%29.mp3", duration: "0:54" },
-                    { title: "Midsummer Cawnival Egg Ride", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/osxkikch/58.%20Midsummer%20Cawnival%20Egg%20Ride.mp3", duration: "1:09" },
+                    { title: "Title Theme (Lunar New Year)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/whwkjrin/39.%20Title%20Theme%20%28Lunar%20New%20Year%29.mp3", duration: "1:56" },
+                    { title: "Title Theme (Winter's Feast)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/qqgjcjnp/40.%20Title%20Theme%20%28Winter%27s%20Feast%29.mp3", duration: "0:56" },
+                    { title: "Title Theme (Wigfrid)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/iwidpozh/41.%20Title%20Theme%20%28Wigfrid%29.mp3", duration: "1:04" },
+                    { title: "Title Theme (Year of the Beefalo)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mngpivdd/42.%20Title%20Theme%20%28Year%20of%20the%20Beefalo%29.mp3", duration: "1:14" },
+                    { title: "Title Theme (Webber)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/jlcenaqe/43.%20Title%20Theme%20%28Webber%29.mp3", duration: "1:14" },
+                    { title: "Title Theme (Waterlogged)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/vsaxnwuh/44.%20Title%20Theme%20%28Waterlogged%29.mp3", duration: "1:06" },
+                    { title: "Title Theme (Wanda)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/eydwwujm/45.%20Title%20Theme%20%28Wanda%29.mp3", duration: "1:12" },
+                    { title: "Title Theme (Wolfgang)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/hyxqnsxl/46.%20Title%20Theme%20%28Wolfgang%29.mp3", duration: "1:36" },
+                    { title: "Nonbinary Code (WX-78 Title Theme)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/mdgufrts/47.%20Nonbinary%20Code%20%28WX-78%20Title%20Theme%29.mp3", duration: "1:25" },
+                    { title: "Title Theme (Pirate Monkeys)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/hhpctmel/48.%20Title%20Theme%20%28Pirate%20Monkeys%29.mp3", duration: "0:59" },
+                    { title: "Title Theme (Portalized)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/protbaxl/49.%20Title%20Theme%20%28Portalized%29.mp3", duration: "1:55" },
+                    { title: "Wrestlemania (Unused Intro)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/pqjawjhg/50.%20Wrestlemania%20%28Unused%20Intro%29.mp3", duration: "1:04" },
+                    { title: "Wrestlemania", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/izwjgdzm/51.%20Wrestlemania.mp3", duration: "0:58" },
+                    { title: "Training (Year of the Carrat)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/kopjbdpm/52.%20Training%20%28Year%20of%20the%20Carrat%29.mp3", duration: "1:38" },
+                    { title: "Rat Race (Year of the Carrat)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/rxnvojdq/53.%20Rat%20Race%20%28Year%20of%20the%20Carrat%29.mp3", duration: "1:17" },
+                    { title: "Midsummer Cawnival Track 1", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/srfcwbsi/54.%20Midsummer%20Cawnival%20Track%201.mp3", duration: "1:29" },
+                    { title: "Midsummer Cawnival Track 2", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/liggozip/55.%20Midsummer%20Cawnival%20Track%202.mp3", duration: "1:27" },
+                    { title: "Music Box Hutch", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/agfibevm/56.%20Music%20Box%20Hutch.mp3", duration: "1:12" },
+                    { title: "Jingles Collection (She Sells Seashells)", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/bvwyduqr/57.%20Jingles%20Collection%20%28She%20Sells%20Seashells%29.mp3", duration: "0:54" },
+                    { title: "Midsummer Cawnival Egg Ride", artist: "Jason Garner", url: "https://nu.vgmtreasurechest.com/soundtracks/don-t-starve-together-gamerip-2016-pc/osxkikch/58.%20Midsummer%20Cawnival%20Egg%20Ride.mp3", duration: "1:09" }
                 ]
             },
             {
@@ -978,7 +983,7 @@
             {
                 id: "album-baldi",
                 title: "Baldi's Basics Series",
-                artist: "Micah McGonigal/Anthony Hampton",
+                artist: "Micah McGonigal",
                 year: "2018-2026",
                 description: "Experience the sound of \"edutainment gone wrong.\" The Baldi’s Basics OST blends nostalgic 90s synth-pop with chaotic, glitchy atmospheres. It’s a masterclass in using \"happy\" music to create genuine dread. Can you collect all seven notebooks before the music stops?",
                 tags: ["Video Game"],
@@ -1005,17 +1010,17 @@
                     { title: "Schoolhouse Escape (Free Run Version)", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/znrvbuvs/06%20Schoolhouse%20Escape%20%28Free%20Run%20Version%29.mp3", duration: "1:32" },
                     { title: "Baldi's Funtime Song", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/nmxdvwui/12%20Baldi%27s%20Funtime%20Song.mp3", duration: "1:01" },
                     { title: "Baldi's Funtime Song (Raw Version)", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/fcwcwzkz/13%20Baldi%27s%20Funtime%20Song%20%28Raw%20Version%29.mp3", duration: "0:52" },
-                    { title: "Schoolhouse Trouble!", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/scjotzts/10%20Schoolhouse%20Trouble%21.mp3", duration: "4:36" },
-                    { title: "Schoolhouse Trouble! (Demo)", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/hpdxbpud/15%20Schoolhouse%20Trouble%21%20%28Demo%29.mp3", duration: "3:48" },
+                    { title: "Schoolhouse Trouble!", artist: "Anthony Hampton", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/scjotzts/10%20Schoolhouse%20Trouble%21.mp3", duration: "4:36" },
+                    { title: "Schoolhouse Trouble! (Demo)", artist: "Anthony Hampton", url: "https://jetta.vgmtreasurechest.com/soundtracks/baldis-basics-classic-remastered-original-soundtrack-2022/hpdxbpud/15%20Schoolhouse%20Trouble%21%20%28Demo%29.mp3", duration: "3:48" },
 
                     //Baldi's Basics Plus
                     { title: "Elevator", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/ehxqmogo/02.%20Elevator.mp3", duration: "0:40" },
                     { title: "Tutorial", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/nieungsu/34.%20Tutorial.mp3", duration: "1:30" },
                     { title: "Event Notification", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/isnkmfqp/28.%20Event%20Notification.mp3", duration: "0:05" },
-                    { title: "Creepy Old Computer", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/aotcdjnm/25.%20Creepy%20Old%20Computer.mp3", duration: "0:39" },
-                    { title: "Hayride Too I Don't Even Care", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/czpaghqi/06.%20Party.mp3", duration: "0:59" },
+                    { title: "Creepy Old Computer", artist: "Cady Bradshaw", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/aotcdjnm/25.%20Creepy%20Old%20Computer.mp3", duration: "0:39" },
+                    { title: "Hayride Too I Don't Even Care", artist: "Cady Bradshaw", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/czpaghqi/06.%20Party.mp3", duration: "0:59" },
                     { title: "Camping", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/scfxtche/24.%20Camp%20Mini%20Game.mp3", duration: "0:46" },
-                    { title: "Win Fanfare", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/rjvzlife/07.%20Win%20%28Field%20Trip%29.mp3", duration: "0:03" },
+                    { title: "Win Fanfare", artist: "Cady Bradshaw", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/rjvzlife/07.%20Win%20%28Field%20Trip%29.mp3", duration: "0:03" },
                     { title: "Time Out", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/qsqyxrpb/33.%20Time%20Out.mp3", duration: "1:33" },
                     { title: "Dancin' Time (with Lyrics)", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/vscikyqf/26.%20Dance%20With%20Lyrics.mp3", duration: "0:20" },
                     { title: "99", url: "https://lambda.vgmtreasurechest.com/soundtracks/baldi-s-basics-plus/jbfwtbbe/23.%2099.mp3", duration: "0:28" },
@@ -1024,7 +1029,7 @@
             {
                 id: "album-expanded-level-editor",
                 title: "Expanded Level Editor Mod",
-                artist: "GrandGames/XavierMusic/Ctuluh10",
+                artist: "GrandGames",
                 year: "2024-2025",
                 description: "Listen to the original soundtrack from the Expanded Level Editor mod! There are a variety of neat songs to help you work on your levels.",
                 tags: ["Video Game"],
@@ -1035,11 +1040,11 @@
                 },
                 topTracks: [0, 1, 2, 4, 5, 7, 8, 9, 10, 11, 12],
                 tracks: [
-                    { title: "Working in a Factory \(Editor E\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorE.mp3", duration: "2:00" },
-                    { title: "Pitstopping \(Editor F\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorF.mp3", duration: "1:53" },
-                    { title: "Fun New School \(Editor G\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorG.mp3", duration: "1:08" },
+                    { title: "Working in a Factory \(Editor E\)", artist: "XavierMusic", url: "https://archive.org/download/expanded-level-editor-ost/EditorE.mp3", duration: "2:00" },
+                    { title: "Pitstopping \(Editor F\)", artist: "Ctuluh10", url: "https://archive.org/download/expanded-level-editor-ost/EditorF.mp3", duration: "1:53" },
+                    { title: "Fun New School \(Editor G\)", artist: "JohnsterSpaceProgram", url: "https://archive.org/download/expanded-level-editor-ost/EditorG.mp3", duration: "1:08" },
                     { title: "Shop \(Editor H\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorH.mp3", duration: "1:57" },
-                    { title: "Dance Party \(Editor I\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorI.mp3", duration: "2:24" },
+                    { title: "Dance Party \(Editor I\)", artist: "JohnsterSpaceProgram", url: "https://archive.org/download/expanded-level-editor-ost/EditorI.mp3", duration: "2:24" },
                     { title: "Sound Familiar? \(Editor J\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorJ.mp3", duration: "1:30" },
                     { title: "Nostalgia! \(Editor K\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorK.mp3", duration: "2:02" },
                     { title: "Moment Enjoyed \(Editor L\)", url: "https://archive.org/download/expanded-level-editor-ost/EditorL.mp3", duration: "1:15" },
@@ -1059,7 +1064,7 @@
                 description: "The DOORS OST balances chilling ambient tracks with high-octane chase music. It’s the sound of luxury meeting a nightmare—perfect for listeners who want to relive the tension of the 100-room gauntlet.",
                 tags: ["Video Game"],
                 hidden: false,
-                realCover: "https://static.wikia.nocookie.net/doors-game/images/b/ba/DOORS_2025_Icon.png/revision/latest/scale-to-width-down/250?cb=20250319104905",
+                realCover: "https://static.wikia.nocookie.net/doors-game/images/b/b3/DOORS_2025_Icon_2.png/revision/latest?cb=20250607123440",
                 bgImage: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2024/09/badges-door.jpg?w=1600&h=900&fit=crop", 
                 dividers: {
                     0: "Volume I", 5: "Volume II", 11: "Volume III", 17: "Volume IV", 23: "Volume V",
@@ -1237,9 +1242,9 @@
                 realCover: "https://i1.sndcdn.com/artworks-000435597081-6p16ir-t500x500.jpg",
                 bgImage: "https://tatler.lakesideschool.org/wp-content/uploads/2022/01/Deltarune-An-example-of-one-of-the-two-ways-to-defeat-Jevil-Deltarune-Chapter-1s-secret-bossYoon-23.png", 
                 dividers: {
-                    0: "Chapter 1", 40: "Chapter 2", 87: "Chapter 3", 125: "Chapter 4",
+                    0: "Chapter 1", 40: "Chapter 2", 87: "Chapter 3", 125: "Chapter 4", 165: "Chapter 5",
                 },
-                topTracks: [0, 2, 3, 6, 7, 8, 9, 10, 12, 16, 18, 20, 23, 24, 29, 31, 32, 33, 38, 42, 44, 45, 49, 51, 52, 53, 55, 57, 58, 61, 62, 71, 78, 80, 81, 87, 88, 90, 97, 102, 106, 112, 113, 116, 124, 129, 135, 136, 137, 139, 144, 146, 149, 154, 155, 157, 159, 162, 164],
+                topTracks: [0, 2, 3, 6, 7, 8, 9, 10, 12, 16, 18, 20, 23, 24, 29, 31, 32, 33, 38, 42, 44, 45, 49, 51, 52, 53, 55, 57, 58, 61, 62, 71, 78, 80, 81, 87, 88, 90, 97, 102, 106, 112, 113, 116, 124, 129, 135, 136, 137, 139, 144, 146, 149, 154, 155, 157, 159, 162, 164, 165, 166, 167, 168, 169, 170, 171, 177, 179, 182, 184, 185, 186, 188, 189, 193, 194, 195, 196, 197, 198, 199, 200, 204],
                 tracks: [
                     //Chapter 1
                     { title: "ANOTHER HIM", url: "https://archive.org/download/gs_toby-fox-deltarune-chapter-1-original-game-soundtrack/01%20ANOTHER%20HIM.mp3", duration: "0:48" },
@@ -1329,8 +1334,8 @@
                     { title: "Chill Jailbreak Alarm To Study And Relax To", url: "https://archive.org/download/DELTARUNE_Chapter_2_OST/Chapter%202%20OST%20FLAC/43%20Chill%20Jailbreak%20Alarm%20To%20Study%20And%20Relax%20To.mp3", duration: "0:24" },
                     { title: "You Can Always Come Home", url: "https://archive.org/download/DELTARUNE_Chapter_2_OST/Chapter%202%20OST%20FLAC/44%20You%20Can%20Always%20Come%20Home.mp3", duration: "1:43" },
                     { title: "Until Next Time", url: "https://archive.org/download/DELTARUNE_Chapter_2_OST/Chapter%202%20OST%20FLAC/45%20Until%20Next%20Time.mp3", duration: "1:02" },
-                    { title: "Before The Story", url: "https://archive.org/download/DELTARUNE_Chapter_2_OST/Chapter%202%20OST%20FLAC/46%20Before%20The%20Story.mp3", duration: "1:31" },
-                    { title: "Berdly (Rejected Concept)", url: "https://archive.org/download/DELTARUNE_Chapter_2_OST/Chapter%202%20OST%20FLAC/47%20Berdly%20%28Rejected%20Concept%29.mp3", duration: "0:20" },
+                    { title: "Before The Story", url: "", duration: "1:31" },
+                    { title: "Berdly (Rejected Concept)", url: "", duration: "0:20" },
                 
                     //Chapter 3
                     { title: "Flashback (Excerpt)", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/01.%20Flashback%20%28Excerpt%29%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "0:37" },
@@ -1413,6 +1418,48 @@
                     { title: "Catswing", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/76.%20Catswing%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "2:02" },
                     { title: "Air Waves", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/77.%20Air%20Waves%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "2:04" },
                     { title: "Concert for you", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/78.%20Concert%20for%20you%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "0:02" },
+                
+                    //Chapter 5
+                    { title: "Scarlet Forest (From \"DELTARUNE Piano Collections Vol. 1\") (Credits Version)", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20%26%20Trevor%20Alan%20Gomes%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2039%20Scarlet%20Forest%20%28From%20-DELTARUNE%20Piano%20Collections%20Vol.%201-%29%20%28Credits%20Version%29.mp3", duration: "1:40" },
+                    { title: "Garden of Hopes and Dreams", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20%26%20insaneintherainmusic%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2011%20Garden%20of%20Hopes%20and%20Dreams.mp3", duration: "3:24" },
+                    { title: "Chapter 5 Logo", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2001%20Chapter%205%20Logo.mp3", duration: "0:08" },
+                    { title: "Inappropriate Recycling", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2002%20Inappropriate%20Recycling.mp3", duration: "1:36" },
+                    { title: "Pirate Dojo", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2003%20Pirate%20Dojo.mp3", duration: "0:52" },
+                    { title: "4rd Sanctuary", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2004%204rd%20Sanctuary.mp3", duration: "1:19" },
+                    { title: "Festival", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2005%20Festival.mp3", duration: "2:00" },
+                    { title: "Catfession...?", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2006%20Catfession...-.mp3", duration: "0:42" },
+                    { title: "Bratfession...?", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2007%20Bratfession...-.mp3", duration: "0:42" },
+                    { title: "I guess I'm in love feat. Itoki Hana", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2008%20I%20guess%20I%27m%20in%20love%20feat.%20Itoki%20Hana.mp3", duration: "2:58" },
+                    { title: "Weirder Birds", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2009%20Weirder%20Birds.mp3", duration: "0:38" },
+                    { title: "Your Dad's Best Friend", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2010%20Your%20Dad%27s%20Best%20Friend.mp3", duration: "0:28" },
+                    { title: "Rakuichi Buster feat. Rakuichi", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2012%20Rakuichi%20Buster%20feat.%20Rakuichi.mp3", duration: "1:50" },
+                    { title: "The Diner Song of Best Friends", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2013%20The%20Diner%20Song%20of%20Best%20Friends.mp3", duration: "1:26" },
+                    { title: "Ride the Board", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2014%20Ride%20the%20Board.mp3", duration: "0:11" },
+                    { title: "Quiet Glade", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2015%20Quiet%20Glade.mp3", duration: "3:18" },
+                    { title: "Who might you be?", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2016%20Who%20might%20you%20be-.mp3", duration: "1:04" },
+                    { title: "Petal Dance", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2017%20Petal%20Dance.mp3", duration: "1:33" },
+                    { title: "Flying Feather", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2018%20Flying%20Feather.mp3", duration: "0:28" },
+                    { title: "Sunset of Seven Suns", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2019%20Sunset%20of%20Seven%20Suns.mp3", duration: "1:36" },
+                    { title: "Shop 3", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2020%20Shop%203.mp3", duration: "1:15" },
+                    { title: "Violet Tactics", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2021%20Violet%20Tactics.mp3", duration: "1:05" },
+                    { title: "Flower King", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2022%20Flower%20King.mp3", duration: "0:40" },
+                    { title: "Flower Foyer", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2023%20Flower%20Foyer.mp3", duration: "0:56" },
+                    { title: "Flower Castle", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2024%20Flower%20Castle.mp3", duration: "4:30" },
+                    { title: "Thousand Cafe Zukan", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2025%20Thousand%20Cafe%20Zukan.mp3", duration: "1:29" },
+                    { title: "I'm Telling!", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2026%20I%27m%20Telling%21.mp3", duration: "0:40" },
+                    { title: "Stop, Criminell!", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2027%20Stop%2C%20Criminell%21.mp3", duration: "0:45" },
+                    { title: "Loving Steps", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2028%20Loving%20Steps.mp3", duration: "2:14" },
+                    { title: "Running Water 3", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2029%20Running%20Water%203.mp3", duration: "1:43" },
+                    { title: "Beautiful Bathtime", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2030%20Beautiful%20Bathtime.mp3", duration: "0:22" },
+                    { title: "Pink", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2031%20Pink.mp3", duration: "1:14" },
+                    { title: "Cutie Mew Mew Magic feat. Camellia", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2032%20Cutie%20Mew%20Mew%20Magic%20feat.%20Camellia.mp3", duration: "3:05" },
+                    { title: "Running Sky", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2033%20Running%20Sky.mp3", duration: "2:22" },
+                    { title: "Flower Man feat. Camellia", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2034%20Flower%20Man%20feat.%20Camellia.mp3", duration: "3:12" },
+                    { title: "That Day", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2035%20That%20Day.mp3", duration: "1:31" },
+                    { title: "Dreamwatchers", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2036%20Dreamwatchers.mp3", duration: "1:18" },
+                    { title: "Weak Flowers", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2037%20Weak%20Flowers.mp3", duration: "1:42" },
+                    { title: "Walking Home", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2038%20Walking%20Home.mp3", duration: "2:17" },
+                    { title: "Goodnight, Sweet Prince", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2040%20Goodnight%2C%20Sweet%20Prince.mp3", duration: "0:31" },
                 ]
             },
             {
@@ -1433,6 +1480,7 @@
                     { title: "It’s TV Time!", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/27.%20It%E2%80%99s%20TV%20Time%21%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "2:50" },
                     { title: "Black Knife", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/30.%20Black%20Knife%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "2:02" },
                     { title: "Hammer of Justice", url: "https://archive.org/download/deltarune-chapter-3-4-soundtrack-toby-fox/58.%20Hammer%20of%20Justice%20%28DELTARUNE%20Chapter%203%2B4%20Soundtrack%29%20-%20Toby%20Fox.mp3", duration: "2:18" },
+                    { title: "Cutie Mew Mew Magic feat. Camellia", url: "https://archive.org/download/deltarune-chapter-5-ost/Toby%20Fox%20-%20DELTARUNE%20Chapter%205%20%28Original%20Game%20Soundtrack%29%20-%2032%20Cutie%20Mew%20Mew%20Magic%20feat.%20Camellia.mp3", duration: "3:05" },
                 ]
             },
 
@@ -1479,7 +1527,7 @@
             {
                 id: "album-zootopia",
                 title: "Zootopia",
-                artist: "Michael Giacchino/Shakira",
+                artist: "Michael Giacchino",
                 year: "2016",
                 description: "Step into the sprawling metropolis where anyone can be anything. This soundtrack captures the pulse of a city built on hope, hustle, and harmony. From the sweeping, cinematic themes of Michael Giacchino to the high-energy pop anthems that define a generation.",
                 tags: ["Movie"],
@@ -1514,13 +1562,13 @@
                     { title: "Three-Toe Bandito", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/vjkykgah/23%20Three-Toe%20Bandito.mp3", duration: "0:43"},
                     { title: "Suite From Zootopia", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/kxjzxmra/25%20Suite%20From%20Zootopia.mp3", duration: "7:28"},
                     { title: "Suite From Zootopia (Movie Version)", url: "https://nu.vgmtreasurechest.com/soundtracks/zootopia-soundtrack/mmzlfuhb/24%20Suite%20From%20Zootopia%20%28Movie%20Version%29.mp3", duration: "8:58"},
-                    { title: "Try Everything", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
+                    { title: "Try Everything", artist: "Shakira", url: "https://archive.org/download/try-everything_202601/Try%20Everything.mp3", duration: "3:17" },
                 ]
             },
             {
                 id: "album-zootopia-2",
                 title: "Zootopia 2",
-                artist: "Michael Giacchino/Shakira",
+                artist: "Michael Giacchino",
                 year: "2025",
                 description: "Buckle up for Michael Giacchino’s wildest work yet. Moving beyond the sounds of the first film, the Zootopia 2 OST is way more energetic, fun, and empowering. Featuring the hit single \"Zoo\" by Shakira, this album is a vibrant and chaotic celebration of the world's most diverse metropolis.",
                 tags: ["Movie"],
@@ -1551,60 +1599,15 @@
                     { title: "World's Worst Detention", url: "https://archive.org/download/zootopia-2-suite/World%27s%20Worst%20Detention.mp3", duration: "3:23"},
                     { title: "Our Differences Don't Make Any Difference", url: "https://archive.org/download/zootopia-2-suite/Our%20Differences%20Don%27t%20Make%20Any%20Difference.mp3", duration: "2:54"},
                     { title: "Zootopia 2 Suite", url: "https://archive.org/download/zootopia-2-suite/Zootopia%202%20Suite.mp3", duration: "10:14"},
-                    { title: "Zoo", url: "https://archive.org/download/try-everything_202601/Zoo.mp3", duration: "3:11" },
+                    { title: "Zoo", artist: "Shakira", url: "https://archive.org/download/try-everything_202601/Zoo.mp3", duration: "3:11" },
                     { title: "Lizard Lounge (Bonus Track)", url: "https://archive.org/download/zootopia-2-suite/Lizard%20Lounge%20%28Bonus%20Track%29.mp3", duration: "3:49"},
                     { title: "Flash from the Past (Bonus Track)", url: "https://archive.org/download/zootopia-2-suite/Flash%20from%20the%20Past%20%28Bonus%20Track%29.mp3", duration: "0:10"},
                 ]
             },
             {
-                id: "album-zootopia-plus",
-                title: "Zootopia+",
-                artist: "Mick Giacchino/Curtis Green/Alan Tudyk",
-                year: "2022",
-                description: "The Zootopia+ OST is a genre-hopping musical expansion of the Oscar-winning world of Zootopia. Composed by Mick Giacchino and Curtis Green (with Michael Giacchino), this 17-track collection mirrors the anthology format of the series, moving seamlessly from cinematic action to reality-TV glitz and high-stakes drama.",
-                tags: ["Show"],
-                hidden: false,
-                realCover: "https://i.scdn.co/image/ab67616d0000b27382dcef258b43c3f147d552a9",
-                bgImage: "https://m.media-amazon.com/images/M/MV5BYmI2YTcyYjAtNWNkMi00OTA0LTk5YzgtMTNiODZhMjQzY2QyXkEyXkFqcGdeQWpnYW1i._V1_.jpg", 
-                dividers: {0: "General", 2: "Season 1, Episode 1", 6: "Season 1, Episode 2", 7: "Season 1, Episode 3", 10: "Season 1, Episode 4", 11: "Season 1, Episode 5", 14: "Season 1, Episode 6",},
-                topTracks: [0, 1, 3, 4, 5, 6, 7, 8, 10, 13, 15, 16],
-                tracks: [
-                    //General
-                    { title: "Zootopia+", url: "https://archive.org/download/zootopiaplus/Zootopia%2B.mp3", duration: "2:33" },
-                    { title: "Zootopia+ (Main Title)", url: "https://archive.org/download/zootopiaplus/Zootopia%2B%20%28Main%20Title%29.mp3", duration: "0:26" },
-                    
-                    //Season 1, Episode 1
-                    { title: "Mid-Day Train to Zootopia", url: "https://archive.org/download/zootopiaplus/Mid-Day%20Train%20to%20Zootopia.mp3", duration: "0:56" },
-                    { title: "A Hare-Raising Adventure", url: "https://archive.org/download/zootopiaplus/A%20Hare-Raising%20Adventure.mp3", duration: "3:19" },
-                    { title: "Hoppily Ever After", url: "https://archive.org/download/zootopiaplus/Hoppily%20Ever%20After.mp3", duration: "1:26" },
-                    { title: "24 Carrot Magic", url: "https://archive.org/download/zootopiaplus/24%20Carrot%20Magic.mp3", duration: "0:37" },
-                    
-                    //Season 1, Episode 2
-                    { title: "The Real Rodents of Little Rodentia", url: "https://archive.org/download/zootopiaplus/The%20Real%20Rodents%20of%20Little%20Rodentia.mp3", duration: "0:41" },
-                    
-                    //Season 1, Episode 3
-                    { title: "Fur Duke/Stop! Goes the Weasel", url: "https://archive.org/download/zootopiaplus/Fur%20Duke_Stop%21%20Goes%20the%20Weasel.mp3", duration: "1:01" },
-                    { title: "Big Time (Performed by Alan Tudyk)", url: "https://archive.org/download/zootopiaplus/Alan%20Tudyk%20-%20Big%20Time%20%28From%20_Zootopia%2B_%29%204.mp3", duration: "5:11" },
-                    { title: "Big Time (Instrumental)", url: "https://archive.org/download/zootopiaplus/Big%20Time%20%28Instrumental%29.mp3", duration: "4:59" },
-                    
-                    //Season 1, Episode 4
-                    { title: "Godfather of the Bride", url: "https://archive.org/download/zootopiaplus/Godfather%20of%20the%20Bride.mp3", duration: "5:57" },
-                    
-                    //Season 1, Episode 5
-                    { title: "Backup Prancers", url: "https://archive.org/download/zootopiaplus/Backup%20Prancers.mp3", duration: "1:19" },
-                    { title: "To Prance or Not to Prance", url: "https://archive.org/download/zootopiaplus/To%20Prance%20or%20Not%20to%20Prance.mp3", duration: "0:29" },
-                    { title: "Prance Prance Revolution", url: "https://archive.org/download/zootopiaplus/Mick%20Giacchino%20-%20Prance%20Prance%20Revolution%20%28From%20_Zootopia%2B_%29.mp3", duration: "1:33" },
-                    
-                    //Season 1, Episode 6
-                    { title: "Vine Dining", url: "https://archive.org/download/zootopiaplus/Vine%20Dining.mp3", duration: "1:28" },
-                    { title: "Why I Otter", url: "https://archive.org/download/zootopiaplus/Why%20I%20Otter.mp3", duration: "3:16" },
-                    { title: "The Lady Sloth Protest Too Much", url: "https://archive.org/download/zootopiaplus/The%20Lady%20Sloth%20Protest%20Too%20Much.mp3", duration: "2:22" },
-                ]
-            },
-            {
                 id: "album-gazelle-zootopia",
                 title: "Zootopia - Gazelle",
-                artist: "Shakira/Gazelle",
+                artist: "Shakira",
                 year: "2016-2025",
                 description: "The official soundtrack featuring Zootopia's greatest pop star, Gazelle. Includes the global hit 'Try Everything' and additional atmosphere from the bustling metropolis of Zootopia.",
                 tags: ["Movie", "Character"],
@@ -1621,7 +1624,146 @@
                     { title: "Zoo (End Credits Version + Instrumental)", url: "https://archive.org/download/zoo-instrumental-end-credits-version/Zoo%20Instrumental%20%28End%20Credits%20Version%29.mp3", duration: "3:27" },
                 ]
             },
-        ];
+            {
+                id: "album-zootopia-plus",
+                title: "Zootopia+",
+                artist: "Mick Giacchino",
+                year: "2022",
+                description: "The Zootopia+ OST is a genre-hopping musical expansion of the Oscar-winning world of Zootopia. Composed by Mick Giacchino and Curtis Green (with Michael Giacchino), this 17-track collection mirrors the anthology format of the series, moving seamlessly from cinematic action to reality-TV glitz and high-stakes drama.",
+                tags: ["Show"],
+                hidden: false,
+                realCover: "https://i.scdn.co/image/ab67616d0000b27382dcef258b43c3f147d552a9",
+                bgImage: "https://m.media-amazon.com/images/M/MV5BYmI2YTcyYjAtNWNkMi00OTA0LTk5YzgtMTNiODZhMjQzY2QyXkEyXkFqcGdeQWpnYW1i._V1_.jpg", 
+                dividers: {0: "General", 2: "Season 1, Episode 1", 6: "Season 1, Episode 2", 7: "Season 1, Episode 3", 10: "Season 1, Episode 4", 11: "Season 1, Episode 5", 14: "Season 1, Episode 6",},
+                topTracks: [0, 1, 3, 4, 5, 6, 7, 8, 10, 13, 15, 16],
+                tracks: [
+                    //General
+                    { title: "Zootopia+", artist: "Mick Giacchino & Curtis Green", url: "https://archive.org/download/zootopiaplus/Zootopia%2B.mp3", duration: "2:33" },
+                    { title: "Zootopia+ (Main Title)", artist: "Mick Giacchino & Curtis Green", url: "https://archive.org/download/zootopiaplus/Zootopia%2B%20%28Main%20Title%29.mp3", duration: "0:26" },
+                    
+                    //Season 1, Episode 1
+                    { title: "Mid-Day Train to Zootopia", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/Mid-Day%20Train%20to%20Zootopia.mp3", duration: "0:56" },
+                    { title: "A Hare-Raising Adventure", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/A%20Hare-Raising%20Adventure.mp3", duration: "3:19" },
+                    { title: "Hoppily Ever After", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/Hoppily%20Ever%20After.mp3", duration: "1:26" },
+                    { title: "24 Carrot Magic", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/24%20Carrot%20Magic.mp3", duration: "0:37" },
+                    
+                    //Season 1, Episode 2
+                    { title: "The Real Rodents of Little Rodentia", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/The%20Real%20Rodents%20of%20Little%20Rodentia.mp3", duration: "0:41" },
+                    
+                    //Season 1, Episode 3
+                    { title: "Fur Duke/Stop! Goes the Weasel", url: "https://archive.org/download/zootopiaplus/Fur%20Duke_Stop%21%20Goes%20the%20Weasel.mp3", duration: "1:01" },
+                    { title: "Big Time (Performed by Alan Tudyk)", artist: "Alan Tudyk", url: "https://archive.org/download/zootopiaplus/Alan%20Tudyk%20-%20Big%20Time%20%28From%20_Zootopia%2B_%29%204.mp3", duration: "5:11" },
+                    { title: "Big Time (Instrumental)", artist: "Michael Giacchino, Elyssa Samsel & Kate Anderson", url: "https://archive.org/download/zootopiaplus/Big%20Time%20%28Instrumental%29.mp3", duration: "4:59" },
+                    
+                    //Season 1, Episode 4
+                    { title: "Godfather of the Bride", url: "https://archive.org/download/zootopiaplus/Godfather%20of%20the%20Bride.mp3", duration: "5:57" },
+                    
+                    //Season 1, Episode 5
+                    { title: "Backup Prancers", url: "https://archive.org/download/zootopiaplus/Backup%20Prancers.mp3", duration: "1:19" },
+                    { title: "To Prance or Not to Prance", url: "https://archive.org/download/zootopiaplus/To%20Prance%20or%20Not%20to%20Prance.mp3", duration: "0:29" },
+                    { title: "Prance Prance Revolution", url: "https://archive.org/download/zootopiaplus/Mick%20Giacchino%20-%20Prance%20Prance%20Revolution%20%28From%20_Zootopia%2B_%29.mp3", duration: "1:33" },
+                    
+                    //Season 1, Episode 6
+                    { title: "Vine Dining", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/Vine%20Dining.mp3", duration: "1:28" },
+                    { title: "Why I Otter", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/Why%20I%20Otter.mp3", duration: "3:16" },
+                    { title: "The Lady Sloth Protest Too Much", artist: "Curtis Green", url: "https://archive.org/download/zootopiaplus/The%20Lady%20Sloth%20Protest%20Too%20Much.mp3", duration: "2:22" },
+                ]
+            },
+            {
+                id: "album-the-amazing-digital-circus",
+                title: "The Amazing Digital Circus",
+                artist: "Gooseworx",
+                year: "2023-2026",
+                description: "Revisit the wacky world of THE AMAZING DIGITAL CIRCUS with these AMAZING DIGITAL SONGS!!\n\nNote: Songs from episodes 5 and beyond might contain sound effects from the episodes, and will NOT be added to the top tracks quite yet! Still awaiting the official versions of these songs.",
+                tags: ["Show"],
+                hidden: false,
+                realCover: "https://i.scdn.co/image/ab67616d0000b2733b2245660bc0c043577014ef",
+                bgImage: "https://i.ytimg.com/vi/sQ5DCwcpMy0/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCdGJxzuxAFY9od1Al2Adv5lCfpQA",
+                dividers: {0: "General", 1: "Episode 1", 17: "Episode 2", 27: "Episode 3", 40: "Episode 4", 50: "Episode 5", 51: "Episode 7", 52: "Episode 8", 53: "Episode 9",},
+                topTracks: [0, 3, 4, 5, 8, 9, 10, 13, 15, 16, 17, 18, 19, 21, 24, 25, 27, 29, 30, 36, 39, 40, 41, 42, 43, 44, 45, 46],
+                tracks: [
+                    //General
+                    { title: "Digital Days", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/17%20Digital%20Days.mp3", duration: "0:47" },
+
+                    //Episode 1
+                    { title: "Welcome to the Show", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/01%20Welcome%20to%20the%20Show.mp3", duration: "0:36" },
+                    { title: "Get Isekai'd!", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/02%20Get%20Isekai%27d%21.mp3", duration: "0:50" },
+                    { title: "All of It", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/03%20All%20of%20It.mp3", duration: "1:13" },
+                    { title: "XDDCC", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/04%20XDDCC.mp3", duration: "1:32" },
+                    { title: "Today's Adventure", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/05%20Today%27s%20Adventure.mp3", duration: "0:58" },
+                    { title: "Useless Blivots", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/06%20Useless%20Blivots.mp3", duration: "1:41" },
+                    { title: "Conversation Piece", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/07%20Conversation%20Piece.mp3", duration: "2:22" },
+                    { title: "Kaufmo the Clown", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/08%20Kaufmo%20the%20Clown.mp3", duration: "1:31" },
+                    { title: "Gone Mad (Unused)", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/09%20Gone%20Mad%20%28Unused%29.mp3", duration: "1:31" },
+                    { title: "Wrong Doors", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/10%20Wrong%20Doors.mp3", duration: "0:38" },
+                    { title: "Worm Mom", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/11%20Worm%20Mom.mp3", duration: "1:15" },
+                    { title: "Enter Exit", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/12%20Enter%20Exit.mp3", duration: "1:16" },
+                    { title: "Going Nowhere", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/13%20Going%20Nowhere.mp3", duration: "1:34" },
+                    { title: "Dinner for Two", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/14%20Dinner%20for%20Two.mp3", duration: "0:31" },
+                    { title: "Sorry About That", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/15%20Sorry%20About%20That.mp3", duration: "0:40" },
+                    { title: "Your New Home", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-original-pilot-soundtrack/16%20Your%20New%20Home.mp3", duration: "1:06" },
+                    
+                    //Episode 2
+                    { title: "Rise and Shine", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/01%20Rise%20and%20Shine.mp3", duration: "0:47" },
+                    { title: "Sacchariferous Sovereignty", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/02%20Sacchariferous%20Sovereignty.mp3", duration: "2:09" },
+                    { title: "Dessert Chase", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/03%20Dessert%20Chase.mp3", duration: "2:35" },
+                    { title: "Out of Bounds", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/04%20Out%20of%20Bounds.mp3", duration: "2:46" },
+                    { title: "What the Fudge xD", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/05%20What%20the%20Fudge%20xD.mp3", duration: "2:02" },
+                    { title: "Somebody Real", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/06%20Somebody%20Real.mp3", duration: "2:14" },
+                    { title: "Reunited", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/07%20Reunited.mp3", duration: "2:06" },
+                    { title: "Gummigoo Joins the Crew!", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/08%20Gummigoo%20Joins%20the%20Crew%21.mp3", duration: "1:42" },
+                    { title: "Not Alone", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/09%20Not%20Alone.mp3", duration: "1:18" },
+                    { title: "Peacefuller Times", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-2-original-webseries-soundtrack/10%20Peacefuller%20Times.mp3", duration: "0:40" },
+
+                    //Episode 3
+                    { title: "Character Quirks", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/01.%20Gooseworx%20-%20Character%20Quirks.mp3", duration: "1:24" },
+                    { title: "Mildenhall Manor", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/02.%20Gooseworx%20-%20Mildenhall%20Manor.mp3", duration: "1:14" },
+                    { title: "Ghostly", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/03.%20Gooseworx%20-%20Ghostly.mp3", duration: "2:20" },
+                    { title: "And How Does That Make You Feel?", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/04.%20Gooseworx%20-%20And%20How%20Does%20That%20Make%20You%20Feel%3F.mp3", duration: "2:47" },
+                    { title: "The Trophy Room", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/05.%20Gooseworx%20-%20The%20Trophy%20Room.mp3", duration: "2:15" },
+                    { title: "Angel Attack", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/06.%20Gooseworx%20-%20Angel%20Attack.mp3", duration: "0:53" },
+                    { title: "Old Bones", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/07.%20Gooseworx%20-%20Old%20Bones.mp3", duration: "2:44" },
+                    { title: "Dead Wife Rag", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/08.%20Gooseworx%20-%20Dead%20Wife%20Rag.mp3", duration: "1:25" },
+                    { title: "Red Dife Wag (Unused)", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/09.%20Gooseworx%20-%20Red%20Dife%20Wag%20%28Unused%29.mp3", duration: "1:03" },
+                    { title: "Possessedmni", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/10.%20Gooseworx%20-%20Possessedmni.mp3", duration: "0:39" },
+                    { title: "Calm Enough to Touch", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/11.%20Gooseworx%20-%20Calm%20Enough%20to%20Touch.mp3", duration: "0:48" },
+                    { title: "Speaking Sensibly", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/12.%20Gooseworx%20-%20Speaking%20Sensibly.mp3", duration: "1:39" },
+                    { title: "Don't You Open That Really Scary Door", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/13.%20Gooseworx%20-%20Don%27t%20You%20Open%20That%20Really%20Scary%20Door.mp3", duration: "0:39" },
+
+                    //Episode 4
+                    { title: "96 MPH Fastball", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/14.%20Gooseworx%20-%2096%20MPH%20Fastball.mp3", duration: "0:42" },
+                    { title: "Boxed Suggestions", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/15.%20Gooseworx%20-%20Boxed%20Suggestions.mp3", duration: "1:46" },
+                    { title: "Morning Routine", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/16.%20Gooseworx%20-%20Morning%20Routine.mp3", duration: "0:35" },
+                    { title: "May I Take Your Order", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/17.%20Gooseworx%20-%20May%20I%20Take%20Your%20Order.mp3", duration: "2:38" },
+                    { title: "Stupid Sauce (the sauce that makes you stupid)", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/18.%20Gooseworx%20-%20Stupid%20Sauce%20%28the%20sauce%20that%20makes%20you%20stupid%29.mp3", duration: "1:59" },
+                    { title: "Can-do Attitude", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/19.%20Gooseworx%20-%20Can-do%20Attitude.mp3", duration: "2:26" },
+                    { title: "Welcome To The Crew, Idiot!", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/20.%20Gooseworx%20-%20Welcome%20To%20The%20Crew%2C%20Idiot%21.mp3", duration: "2:28" },
+                    { title: "Still Life", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/21.%20Gooseworx%20-%20Still%20Life.mp3", duration: "0:57" },
+                    { title: "Still Going", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/22.%20Gooseworx%20-%20Still%20Going.mp3", duration: "1:53" },
+                    { title: "Still Friends", url: "https://archive.org/download/gooseworx-evan-alderete-the-amazing-digital-circus-episode-3-4-flac/23.%20Gooseworx%20-%20Still%20Friends.mp3", duration: "0:50" },
+
+                    //Episode 5
+                    { title: "Intermission Time!", url: "https://archive.org/download/yes-no-maybe-so-stop/_Intermission%20Time_%20__%20OST%20from%20THE%20AMAZING%20DIGITAL%20CIRCUS%20-%20Ep%205_%20Untitled.mp3", duration: "1:04" },
+
+                    //Episode 7
+                    { title: "Abstraction", url: "https://archive.org/download/ABSTRACTION-TIME-YES-YEAH-I-KNOW/JAX%20ABSTRACTION%20MUSIC%20-%20TADC%20EPISODE%207.mp3", duration: "1:37" },
+                
+                    //Episode 8
+                    { title: "The One Who's Running The Show", url: "https://archive.org/download/the-one-whos-running-the-show-gooseworx-flac/The%20One%20Who%27s%20Running%20the%20Show%20-%20Gooseworx.mp3", duration: "2:14"},
+
+                    //Episode 9
+                    { title: "Too Much to Get Over (feat. bo en)", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/01%20-%20Too%20Much%20to%20Get%20Over%20%28feat.%20bo%20en%29.flac", duration: "1:09"},
+                    { title: "Too Much to Get Over (Instrumental)", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/21%20-%20Too%20Much%20to%20Get%20Over%20%28feat.%20bo%20en%29%20%28Instrumental%29.flac", duration: "1:09"},
+                    { title: "Jaxstraction", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/04%20-%20Abstraction.flac", duration: "0:57"},
+                    { title: "Isn't She Lovely? (feat. JobbytheHong)", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/11%20-%20Isn%27t%20She%20Lovely%20%28feat.%20JobbytheHong%29.flac", duration: "1:37"},
+                    { title: "Isn't She Lovely? (Instrumental)", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/22%20-%20Isn%27t%20She%20Lovely%20%28feat.%20JobbytheHong%29%20%28Instrumental%29.flac", duration: "1:37"},
+                    { title: "Complex Emotions", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/12%20-%20Complex%20Emotions.flac", duration: "1:09"},
+                    { title: "All Good Things Take Time", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/16%20-%20All%20Good%20Things%20Take%20Time.flac", duration: "1:02"},
+                    { title: "No More Secrets", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/17%20-%20No%20More%20Secrets.flac", duration: "2:11"},
+                    { title: "Digital Days (Extended)", url: "https://archive.org/download/YESSSSSSSSSSSSSSSSSSS/20%20-%20Digital%20Days%20%28Extended%29.flac", duration: "1:34"},
+                ]
+            },
+        ];        
 
         const homeSegments = [
             {
@@ -1629,6 +1771,12 @@
                 title: "Celebrate 10+ Years of Zoogetherness!",
                 description: "A tribute to the world of Zootopia. Explore the original soundscapes and the high-energy sequels.",
                 albumIds: ["album-zootopia", "album-zootopia-2", "album-zootopia-plus", "album-gazelle-zootopia"]
+            },
+            {
+                id: "sandbox-games",
+                title: "Build Your World!",
+                description: "Listen to a handful of songs from sandbox games, like Minecraft and Terraria!",
+                albumIds: ["album-minecraft", "album-contentified", "album-terraria"]
             }
         ];
 
@@ -1650,6 +1798,7 @@
         let currentPlaybackRate = 1;
         let lyrics = []; // Array of { start: seconds, end: seconds, text: string }
         let lyricsEnabled = false;
+        let showRemainingTime = false;
 
         const audio = document.getElementById('main-audio');
         const playPauseBtn = document.getElementById('btn-play-pause');
@@ -1692,6 +1841,8 @@
         const lyricsOverlay = document.getElementById('lyrics-overlay');
         const lyricsContent = document.getElementById('lyrics-content');
         const progressTooltip = document.getElementById('progress-tooltip');
+        const stopBtn = document.getElementById('btn-stop');
+        const timerContainer = document.getElementById('timer-container');
 
         progressContainer.addEventListener('mousemove', (e) => {
             if (!audio.duration) return;
@@ -1758,6 +1909,45 @@
                 closeLyrics();
             }
         };
+
+        function stopTrack() {
+            // 1. Pause and reset the audio element
+            audio.pause();
+            audio.currentTime = 0;
+            audio.removeAttribute('src');
+            audio.load();
+
+            // 2. Reset playback state flags
+            isPlaying = false;
+            activeAlbumId = null;
+            currentPlaylist = [];
+            currentTrackIndex = 0;
+
+            // 3. Reset player metadata back to default state
+            currentTitle.innerText = "Pick a record";
+            currentArtist.innerText = "Firon Archive";
+            currentCover.src = "";
+            currentCover.classList.add('opacity-0');
+            sidePlayingInfo.innerText = "Offline";
+
+            // 4. Reset timeline and progress bar
+            progressBar.style.width = "0%";
+            timeCurrent.innerText = "0:00";
+            // Respects showRemainingTime state when track is stopped
+            updateTimerDisplay(); 
+
+
+            // 5. Hide additional controls & overlays
+            scopeWrapper.classList.add('hidden');
+            if (typeof closeLyrics === 'function') closeLyrics();
+
+            // 6. Reset play/pause button icon & document title
+            document.title = "Firon - Music Archive";
+            updatePlayButton();
+
+            // 7. Remove active track highlight from album views
+            updateUIHighlights();
+        }
 
         async function loadLyrics() {
             lyricsContent.innerText = "Loading lyrics...";
@@ -1930,6 +2120,32 @@
             };
             mobileVolume.value = audio.volume;
             mobileSpeed.value = currentPlaybackRate;
+
+            // Enable pointer cursor and tooltip for the total time element
+            timerContainer.style.cursor = 'pointer';
+            timerContainer.title = 'Click to toggle remaining time';
+
+            timerContainer.onclick = () => {
+                showRemainingTime = !showRemainingTime;
+                // Update display immediately if audio has loaded duration
+                updateTimerDisplay(); // Updates total time display immediately
+            };
+        }
+
+        function updateTimerDisplay() {
+            // If no song is loaded or duration is not available yet
+            if (!audio.duration || isNaN(audio.duration)) {
+                timeTotal.innerText = showRemainingTime ? "-0:00" : "0:00";
+                return;
+            }
+
+            // Active song playback display
+            if (showRemainingTime) {
+                const remaining = Math.floor(audio.duration) - Math.floor(audio.currentTime);
+                timeTotal.innerText = `-${formatTime(remaining)}`;
+            } else {
+                timeTotal.innerText = formatTime(audio.duration);
+            }
         }
 
         function toggleSidebar(forceClose) {
@@ -2200,7 +2416,7 @@
                     <img src="${song.album.realCover}" class="w-10 h-10 rounded mr-4 object-cover">
                     <div class="flex-1 overflow-hidden">
                         <div class="font-medium text-sm truncate track-title">${song.title}</div>
-                        <div class="text-xs text-gray-500 truncate">${song.album.artist} • ${song.album.title}</div>
+                        <div class="text-xs text-gray-500 truncate">${song.artist || song.album.artist} • ${song.album.title}</div>
                     </div>
                     <div class="time-cell text-gray-500 text-xs font-mono ml-4">${song.duration}</div>
                 `;
@@ -2234,7 +2450,7 @@
             let currentLabel = 'General';
             return album.tracks.map((t, idx) => {
                 if (album.dividers && album.dividers[idx]) currentLabel = album.dividers[idx];
-                return { ...t, albumId: album.id, cover: album.realCover, artist: album.artist, section: currentLabel, dividers: album.dividers || {} };
+                return { ...t, albumId: album.id, cover: album.realCover, artist: t.artist || album.artist, section: currentLabel, dividers: album.dividers || {} };
             });
         }
 
@@ -2349,7 +2565,7 @@
                     <div class="hidden group-hover:block text-white text-xs"><i class="fas fa-play"></i></div>
                     <div class="overflow-hidden pr-4">
                         <div class="font-medium text-sm truncate track-title">${track.title}</div>
-                        <div class="text-xs text-gray-500 truncate">${album.artist}</div>
+                        <div class="text-xs text-gray-500 truncate">${track.artist || album.artist}</div>
                     </div>
                     <div class="time-cell text-gray-500 text-xs font-mono">${track.duration}</div>
                 `;
@@ -2507,10 +2723,13 @@
                 const pct = (audio.currentTime / audio.duration) * 100 || 0;
                 progressBar.style.width = `${pct}%`;
                 timeCurrent.innerText = formatTime(audio.currentTime);
-                timeTotal.innerText = formatTime(audio.duration);
+
+                // Display remaining time with a minus sign or standard total duration
+                updateTimerDisplay(); // Syncs total time during playback
             }
         };
         playPauseBtn.onclick = togglePlay; nextBtn.onclick = nextTrack; prevBtn.onclick = prevTrack;
+        stopBtn.onclick = stopTrack;
         init();
     </script>
 </body>
